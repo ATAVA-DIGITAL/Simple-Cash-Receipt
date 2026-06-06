@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>നെയിം സ്ലിപ്പ് മേക്കർ</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background-color: #f4f4f4; text-align: center; }
+        .container { max-width: 500px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        input, select { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }
+        .slip-preview { border: 2px solid #ccc; padding: 20px; margin-top: 20px; border-radius: 8px; min-height: 150px; position: relative; }
+        .brand { font-size: 12px; color: gray; position: absolute; bottom: 5px; right: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>നെയിം സ്ലിപ്പ് നിർമ്മിക്കുക</h2>
+    <input type="text" id="name" placeholder="കുട്ടിയുടെ പേര്">
+    <input type="text" id="class" placeholder="ക്ലാസ്">
+    <input type="text" id="div" placeholder="ഡിവിഷൻ">
+    <input type="text" id="school" placeholder="സ്കൂളിന്റെ പേര്">
+    
+    <label for="bg-color">പശ്ചാത്തല നിറം തിരഞ്ഞെടുക്കുക:</label>
+    <input type="color" id="bg-color" value="#ffffff">
+
+    <div id="preview" class="slip-preview">
+        <h3 id="p-name">പേര് ഇവിടെ വരും</h3>
+        <p>ക്ലാസ്: <span id="p-class"></span> - ഡിവിഷൻ: <span id="p-div"></span></p>
+        <p>സ്കൂൾ: <span id="p-school"></span></p>
+        <div class="brand">powered by അറ്റാവ</div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('name').addEventListener('input', function(e) {
+        document.getElementById('p-name').textContent = e.target.value;
+    });
+    document.getElementById('class').addEventListener('input', function(e) {
+        document.getElementById('p-class').textContent = e.target.value;
+    });
+    document.getElementById('div').addEventListener('input', function(e) {
+        document.getElementById('p-div').textContent = e.target.value;
+    });
+    document.getElementById('school').addEventListener('input', function(e) {
+        document.getElementById('p-school').textContent = e.target.value;
+    });
+    document.getElementById('bg-color').addEventListener('input', function(e) {
+        document.getElementById('preview').style.backgroundColor = e.target.value;
+    });
+</script>
+
+</body>
+</html>
