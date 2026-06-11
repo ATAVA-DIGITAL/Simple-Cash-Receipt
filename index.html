@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Cash Receipt Generator - ATAVA DIGITAL</title>
+    <title>Simple Cash Receipt Generator - ATAVA DST</title>
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -27,10 +27,10 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1.2fr;
             gap: 30px;
         }
 
@@ -99,6 +99,35 @@
             gap: 15px;
         }
 
+        /* Items Dynamic Row */
+        .items-table-input {
+            width: 100%;
+            margin-top: 10px;
+            border-collapse: collapse;
+        }
+        .items-table-input th, .items-table-input td {
+            padding: 8px;
+            text-align: left;
+        }
+        .btn-add-row {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .btn-delete-row {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
         /* Preview Styling */
         .preview-section {
             position: sticky;
@@ -113,7 +142,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             border: 1px solid #e0e0e0;
             position: relative;
-            min-height: 450px;
+            min-height: 520px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -158,18 +187,23 @@
             letter-spacing: 1px;
         }
 
-        /* Receipt Body */
+        /* Receipt Meta */
         .receipt-meta {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             font-size: 14px;
         }
 
+        /* Receipt Body */
         .receipt-body {
             font-size: 15px;
-            line-height: 2;
+            line-height: 1.8;
             flex-grow: 1;
+        }
+
+        .customer-row {
+            margin-bottom: 15px;
         }
 
         .line-item {
@@ -178,25 +212,41 @@
             padding-left: 5px;
         }
 
-        .amount-row {
-            margin-top: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #f9f9f9;
-            padding: 15px;
-            border: 1px solid #e0e0e0;
+        /* Items Preview Table */
+        .preview-items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        .preview-items-table th {
+            background-color: #f8f9fa;
+            border-top: 1px solid #333;
+            border-bottom: 1px solid #333;
+            padding: 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .preview-items-table td {
+            border-bottom: 1px dashed #e0e0e0;
+            padding: 8px;
+            font-size: 14px;
+        }
+        .preview-items-table .total-tr {
+            border-top: 1px solid #333;
+            border-bottom: 2px double #333;
+            font-weight: bold;
+            font-size: 16px;
         }
 
-        .receipt-amount {
-            font-size: 20px;
-            font-weight: bold;
-            color: #111;
+        .payment-method-box {
+            margin-top: 10px;
+            font-size: 14px;
         }
 
         /* Footer & Branding */
         .receipt-footer {
-            margin-top: 40px;
+            margin-top: 30px;
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
@@ -251,7 +301,7 @@
         }
 
         /* Responsive */
-        @media (max-width: 850px) {
+        @media (max-width: 950px) {
             .container {
                 grid-template-columns: 1fr;
             }
@@ -266,7 +316,7 @@
                 background-color: #fff;
                 padding: 0;
             }
-            .form-section, header, .actions {
+            .form-section, header, .actions, .btn-add-row, .btn-delete-row {
                 display: none !important;
             }
             .container {
@@ -304,12 +354,12 @@
 
             <div class="form-group">
                 <label for="bizName">Business / Shop Name</label>
-                <input type="text" id="bizName" placeholder="e.g., My Smart Boutique" value="My Business Name">
+                <input type="text" id="bizName" placeholder="e.g., Marhaba Typing" value="MARHABA TYPING AND DOCUMENT CLEARING">
             </div>
 
             <div class="form-group">
                 <label for="bizAddress">Address & Contact Info</label>
-                <textarea id="bizAddress" rows="2" placeholder="Street, City, Phone No"></textarea>
+                <textarea id="bizAddress" rows="2" placeholder="Street, City, Phone No">UMM AL QUWAIN</textarea>
             </div>
 
             <div class="row">
@@ -325,28 +375,39 @@
 
             <div class="form-group">
                 <label for="custName">Received From (Customer Name)</label>
-                <input type="text" id="custName" placeholder="Enter customer name">
+                <input type="text" id="custName" placeholder="Enter customer name" value="MUHAMMAD">
+            </div>
+
+            <!-- Multiple Descriptions Section -->
+            <div class="form-group">
+                <label style="margin-bottom: 0;">Descriptions / Particulars</label>
+                <table class="items-table-input" id="itemsTableInput">
+                    <thead>
+                        <tr>
+                            <th style="width: 70%;">Description</th>
+                            <th style="width: 25%;">Amount</th>
+                            <th style="width: 5%;"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="inputFieldsContainer">
+                        <tr>
+                            <td><input type="text" class="item-desc" placeholder="e.g., VISA STAMPING" value="VISA STAMPING"></td>
+                            <td><input type="number" class="item-amt" placeholder="0.00" value="500" oninput="updateLivePreview()"></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" class="btn-add-row" onclick="addNewRow()">+ Add Row</button>
             </div>
 
             <div class="form-group">
-                <label for="purpose">Payment Purpose / Description</label>
-                <input type="text" id="purpose" placeholder="e.g., Stitching Charges, Advance Payment">
-            </div>
-
-            <div class="row">
-                <div class="form-group">
-                    <label for="amount">Amount ($ / ₹ / AED)</label>
-                    <input type="number" id="amount" placeholder="0.00">
-                </div>
-                <div class="form-group">
-                    <label for="payMethod">Payment Method</label>
-                    <select id="payMethod">
-                        <option value="Cash">Cash</option>
-                        <option value="GPay / UPI">GPay / UPI</option>
-                        <option value="Card">Card</option>
-                        <option value="Bank Transfer">Bank Transfer</option>
-                    </select>
-                </div>
+                <label for="payMethod">Payment Method</label>
+                <select id="payMethod">
+                    <option value="Cash">Cash</option>
+                    <option value="GPay / UPI">GPay / UPI</option>
+                    <option value="Card">Card</option>
+                    <option value="Bank Transfer">Bank Transfer</option>
+                </select>
             </div>
         </div>
 
@@ -358,8 +419,8 @@
                     <!-- Receipt Header -->
                     <div class="receipt-header">
                         <div class="biz-details">
-                            <h3 id="viewBizName">MY BUSINESS NAME</h3>
-                            <p id="viewBizAddress">Business Address goes here...</p>
+                            <h3 id="viewBizName">MARHABA TYPING AND DOCUMENT CLEARING</h3>
+                            <p id="viewBizAddress">UMM AL QUWAIN</p>
                         </div>
                         <div>
                             <img id="viewLogo" class="receipt-logo" src="" alt="" style="display: none;">
@@ -375,18 +436,37 @@
                             <h2>CASH RECEIPT</h2>
                         </div>
                         <div>
-                            <p><strong>Date:</strong> <span id="viewDate">--/--/----</span></p>
+                            <p><strong>Date:</strong> <span id="viewDate">--/---/----</span></p>
                         </div>
                     </div>
 
                     <!-- Receipt Body -->
                     <div class="receipt-body">
-                        <p>Received with thanks from <strong class="line-item" id="viewCustName" style="width: 70%;">...................................................</strong></p>
-                        <p>the sum of amount for <strong class="line-item" id="viewPurpose" style="width: 76%;">...................................................</strong></p>
+                        <div class="customer-row">
+                            Received with thanks from <strong class="line-item" id="viewCustName" style="width: 65%;">MUHAMMAD</strong>
+                        </div>
                         
-                        <div class="amount-row">
-                            <div class="receipt-amount">Amount: <span id="viewAmount">0.00</span></div>
-                            <div><strong>Method:</strong> <span id="viewPayMethod">Cash</span></div>
+                        <!-- Description Preview Table -->
+                        <table class="preview-items-table">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: left;">Description</th>
+                                    <th style="text-align: right; width: 30%;">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="previewItemsContainer">
+                                <!-- Dynamic Rows Go Here -->
+                            </tbody>
+                            <tfoot>
+                                <tr class="total-tr">
+                                    <td style="text-align: right;">Total Amount:</td>
+                                    <td style="text-align: right;" id="viewTotalAmount">0.00</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <div class="payment-method-box">
+                            <strong>Payment Method:</strong> <span id="viewPayMethod">Cash</span>
                         </div>
                     </div>
                 </div>
@@ -394,7 +474,7 @@
                 <!-- Receipt Footer & Branding -->
                 <div class="receipt-footer">
                     <div class="atava-branding">
-                        Powered by <span>ATAVA DIGITAL</span>
+                        Powered by <span>ATAVA DST</span>
                     </div>
                     <div class="signature">
                         <div class="sig-line">Authorized Signatory</div>
@@ -413,7 +493,6 @@
         // Set Default Date to Today
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('receiptDate').value = today;
-        formatAndSetDate(today);
 
         // Input Elements
         const bizName = document.getElementById('bizName');
@@ -421,8 +500,6 @@
         const receiptNo = document.getElementById('receiptNo');
         const receiptDate = document.getElementById('receiptDate');
         const custName = document.getElementById('custName');
-        const purpose = document.getElementById('purpose');
-        const amount = document.getElementById('amount');
         const payMethod = document.getElementById('payMethod');
         const logoInput = document.getElementById('logoInput');
 
@@ -432,23 +509,16 @@
         const viewReceiptNo = document.getElementById('viewReceiptNo');
         const viewDate = document.getElementById('viewDate');
         const viewCustName = document.getElementById('viewCustName');
-        const viewPurpose = document.getElementById('viewPurpose');
-        const viewAmount = document.getElementById('viewAmount');
         const viewPayMethod = document.getElementById('viewPayMethod');
         const viewLogo = document.getElementById('viewLogo');
 
         // Event Listeners for Live Updates
-        bizName.addEventListener('input', () => viewBizName.innerText = bizName.value || 'BUSINESS NAME');
-        bizAddress.addEventListener('input', () => viewBizAddress.innerText = bizAddress.value || 'Business Address goes here...');
-        receiptNo.addEventListener('input', () => viewReceiptNo.innerText = receiptNo.value || '---');
-        custName.addEventListener('input', () => viewCustName.innerText = custName.value || '...................................................');
-        purpose.addEventListener('input', () => viewPurpose.innerText = purpose.value || '...................................................');
-        amount.addEventListener('input', () => viewAmount.innerText = amount.value || '0.00');
-        payMethod.addEventListener('change', () => viewPayMethod.innerText = payMethod.value);
-        
-        receiptDate.addEventListener('change', () => {
-            formatAndSetDate(receiptDate.value);
-        });
+        bizName.addEventListener('input', updateLivePreview);
+        bizAddress.addEventListener('input', updateLivePreview);
+        receiptNo.addEventListener('input', updateLivePreview);
+        custName.addEventListener('input', updateLivePreview);
+        payMethod.addEventListener('change', updateLivePreview);
+        receiptDate.addEventListener('change', updateLivePreview);
 
         // Logo Upload Handler
         logoInput.addEventListener('change', function() {
@@ -466,14 +536,70 @@
             }
         });
 
-        function formatAndSetDate(dateString) {
-            if(!dateString) {
-                viewDate.innerText = '--/--/----';
-                return;
-            }
-            const [year, month, day] = dateString.split('-');
-            viewDate.innerText = `${day}/${month}/${year}`;
+        // Add New Input Row for Descriptions
+        function addNewRow() {
+            const container = document.getElementById('inputFieldsContainer');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><input type="text" class="item-desc" placeholder="Next description" oninput="updateLivePreview()"></td>
+                <td><input type="number" class="item-amt" placeholder="0.00" oninput="updateLivePreview()"></td>
+                <td><button type="button" class="btn-delete-row" onclick="deleteRow(this)">X</button></td>
+            `;
+            container.appendChild(tr);
+            updateLivePreview();
         }
+
+        // Delete Input Row
+        function deleteRow(button) {
+            button.closest('tr').remove();
+            updateLivePreview();
+        }
+
+        // Format Date to 11/Jun/2026
+        function formatCustomDate(dateString) {
+            if(!dateString) return '--/---/----';
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const [year, month, day] = dateString.split('-');
+            const monthName = months[parseInt(month) - 1];
+            return `${day}/${monthName}/${year}`;
+        }
+
+        // Core Function to Synchronize and Update Preview
+        function updateLivePreview() {
+            // Text values
+            viewBizName.innerText = bizName.value || 'BUSINESS NAME';
+            viewBizAddress.innerText = bizAddress.value || 'Address...';
+            viewReceiptNo.innerText = receiptNo.value || '---';
+            viewCustName.innerText = custName.value || '...................................................';
+            viewPayMethod.innerText = payMethod.value;
+            viewDate.innerText = formatCustomDate(receiptDate.value);
+
+            // Handle Dynamic Rows & Total Calculation
+            const descs = document.querySelectorAll('.item-desc');
+            const amts = document.querySelectorAll('.item-amt');
+            const previewContainer = document.getElementById('previewItemsContainer');
+            
+            previewContainer.innerHTML = ''; // clear preview rows
+            let total = 0;
+
+            descs.forEach((descInput, index) => {
+                const descValue = descInput.value || '...................................................';
+                const amtValue = parseFloat(amts[index].value) || 0;
+                total += amtValue;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${descValue}</td>
+                    <td style="text-align: right;">${amtValue.toFixed(2)}</td>
+                `;
+                previewContainer.appendChild(tr);
+            });
+
+            document.getElementById('viewTotalAmount').innerText = total.toFixed(2);
+        }
+
+        // Initial trigger on setup load
+        updateLivePreview();
     </script>
 </body>
 </html>
