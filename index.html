@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Cash Receipt Generator - ATAVA DIGITAL</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f5f7fa;
+            --card-bg: #ffffff;
+            --text-color: #333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        header {
+            grid-column: span 2;
+            text-align: center;
+            padding: 10px 0 20px 0;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Form Styling */
+        .form-section {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .form-section h2 {
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--bg-color);
+            padding-bottom: 10px;
+            font-size: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        /* Preview Styling */
+        .preview-section {
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        .receipt-box {
+            background: #fff;
+            padding: 30px;
+            border-radius: 4px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid #e0e0e0;
+            position: relative;
+            min-height: 450px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Receipt Header */
+        .receipt-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid #333;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .biz-details h3 {
+            font-size: 22px;
+            color: #111;
+            text-transform: uppercase;
+        }
+
+        .biz-details p {
+            font-size: 13px;
+            color: #555;
+            margin-top: 3px;
+            white-space: pre-line;
+        }
+
+        .receipt-logo {
+            max-width: 100px;
+            max-height: 80px;
+            object-fit: contain;
+        }
+
+        .receipt-title-box {
+            text-align: right;
+        }
+
+        .receipt-title-box h2 {
+            font-size: 24px;
+            color: var(--primary-color);
+            letter-spacing: 1px;
+        }
+
+        /* Receipt Body */
+        .receipt-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .receipt-body {
+            font-size: 15px;
+            line-height: 2;
+            flex-grow: 1;
+        }
+
+        .line-item {
+            border-bottom: 1px dashed #ccc;
+            display: inline-block;
+            padding-left: 5px;
+        }
+
+        .amount-row {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f9f9f9;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .receipt-amount {
+            font-size: 20px;
+            font-weight: bold;
+            color: #111;
+        }
+
+        /* Footer & Branding */
+        .receipt-footer {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .signature {
+            text-align: center;
+            width: 150px;
+        }
+
+        .sig-line {
+            border-top: 1px solid #333;
+            margin-top: 40px;
+            font-size: 12px;
+            color: #555;
+        }
+
+        .atava-branding {
+            font-size: 11px;
+            color: #999;
+            text-align: left;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .atava-branding span {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        /* Action Buttons */
+        .actions {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .btn-print {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: background 0.2s;
+        }
+
+        .btn-print:hover {
+            background-color: #27ae60;
+        }
+
+        /* Responsive */
+        @media (max-width: 850px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            header {
+                grid-column: span 1;
+            }
+        }
+
+        /* PRINT STYLES */
+        @media print {
+            body {
+                background-color: #fff;
+                padding: 0;
+            }
+            .form-section, header, .actions {
+                display: none !important;
+            }
+            .container {
+                display: block;
+            }
+            .preview-section {
+                position: relative;
+                width: 100%;
+            }
+            .receipt-box {
+                box-shadow: none !important;
+                border: 1px solid #000 !important;
+                padding: 20px;
+                border-radius: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Simple Cash Receipt Generator</h1>
+            <p>Create and Print Professional Receipts Instantly</p>
+        </header>
+
+        <!-- Left Side: Inputs -->
+        <div class="form-section">
+            <h2>Receipt Details</h2>
+            
+            <div class="form-group">
+                <label for="logoInput">Upload Company Logo</label>
+                <input type="file" id="logoInput" accept="image/*">
+            </div>
+
+            <div class="form-group">
+                <label for="bizName">Business / Shop Name</label>
+                <input type="text" id="bizName" placeholder="e.g., My Smart Boutique" value="My Business Name">
+            </div>
+
+            <div class="form-group">
+                <label for="bizAddress">Address & Contact Info</label>
+                <textarea id="bizAddress" rows="2" placeholder="Street, City, Phone No"></textarea>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label for="receiptNo">Receipt No</label>
+                    <input type="text" id="receiptNo" value="101">
+                </div>
+                <div class="form-group">
+                    <label for="receiptDate">Date</label>
+                    <input type="date" id="receiptDate">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="custName">Received From (Customer Name)</label>
+                <input type="text" id="custName" placeholder="Enter customer name">
+            </div>
+
+            <div class="form-group">
+                <label for="purpose">Payment Purpose / Description</label>
+                <input type="text" id="purpose" placeholder="e.g., Stitching Charges, Advance Payment">
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label for="amount">Amount ($ / ₹ / AED)</label>
+                    <input type="number" id="amount" placeholder="0.00">
+                </div>
+                <div class="form-group">
+                    <label for="payMethod">Payment Method</label>
+                    <select id="payMethod">
+                        <option value="Cash">Cash</option>
+                        <option value="GPay / UPI">GPay / UPI</option>
+                        <option value="Card">Card</option>
+                        <option value="Bank Transfer">Bank Transfer</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side: Live Preview -->
+        <div class="preview-section">
+            <div class="receipt-box" id="receiptPrintArea">
+                
+                <div>
+                    <!-- Receipt Header -->
+                    <div class="receipt-header">
+                        <div class="biz-details">
+                            <h3 id="viewBizName">MY BUSINESS NAME</h3>
+                            <p id="viewBizAddress">Business Address goes here...</p>
+                        </div>
+                        <div>
+                            <img id="viewLogo" class="receipt-logo" src="" alt="" style="display: none;">
+                        </div>
+                    </div>
+
+                    <!-- Receipt Title & Meta -->
+                    <div class="receipt-meta">
+                        <div>
+                            <p><strong>Receipt No:</strong> <span id="viewReceiptNo">101</span></p>
+                        </div>
+                        <div class="receipt-title-box">
+                            <h2>CASH RECEIPT</h2>
+                        </div>
+                        <div>
+                            <p><strong>Date:</strong> <span id="viewDate">--/--/----</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Receipt Body -->
+                    <div class="receipt-body">
+                        <p>Received with thanks from <strong class="line-item" id="viewCustName" style="width: 70%;">...................................................</strong></p>
+                        <p>the sum of amount for <strong class="line-item" id="viewPurpose" style="width: 76%;">...................................................</strong></p>
+                        
+                        <div class="amount-row">
+                            <div class="receipt-amount">Amount: <span id="viewAmount">0.00</span></div>
+                            <div><strong>Method:</strong> <span id="viewPayMethod">Cash</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Receipt Footer & Branding -->
+                <div class="receipt-footer">
+                    <div class="atava-branding">
+                        Powered by <span>ATAVA DIGITAL</span>
+                    </div>
+                    <div class="signature">
+                        <div class="sig-line">Authorized Signatory</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="actions">
+                <button class="btn-print" onclick="window.print()">Print / Save PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set Default Date to Today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('receiptDate').value = today;
+        formatAndSetDate(today);
+
+        // Input Elements
+        const bizName = document.getElementById('bizName');
+        const bizAddress = document.getElementById('bizAddress');
+        const receiptNo = document.getElementById('receiptNo');
+        const receiptDate = document.getElementById('receiptDate');
+        const custName = document.getElementById('custName');
+        const purpose = document.getElementById('purpose');
+        const amount = document.getElementById('amount');
+        const payMethod = document.getElementById('payMethod');
+        const logoInput = document.getElementById('logoInput');
+
+        // Preview Elements
+        const viewBizName = document.getElementById('viewBizName');
+        const viewBizAddress = document.getElementById('viewBizAddress');
+        const viewReceiptNo = document.getElementById('viewReceiptNo');
+        const viewDate = document.getElementById('viewDate');
+        const viewCustName = document.getElementById('viewCustName');
+        const viewPurpose = document.getElementById('viewPurpose');
+        const viewAmount = document.getElementById('viewAmount');
+        const viewPayMethod = document.getElementById('viewPayMethod');
+        const viewLogo = document.getElementById('viewLogo');
+
+        // Event Listeners for Live Updates
+        bizName.addEventListener('input', () => viewBizName.innerText = bizName.value || 'BUSINESS NAME');
+        bizAddress.addEventListener('input', () => viewBizAddress.innerText = bizAddress.value || 'Business Address goes here...');
+        receiptNo.addEventListener('input', () => viewReceiptNo.innerText = receiptNo.value || '---');
+        custName.addEventListener('input', () => viewCustName.innerText = custName.value || '...................................................');
+        purpose.addEventListener('input', () => viewPurpose.innerText = purpose.value || '...................................................');
+        amount.addEventListener('input', () => viewAmount.innerText = amount.value || '0.00');
+        payMethod.addEventListener('change', () => viewPayMethod.innerText = payMethod.value);
+        
+        receiptDate.addEventListener('change', () => {
+            formatAndSetDate(receiptDate.value);
+        });
+
+        // Logo Upload Handler
+        logoInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    viewLogo.src = e.target.result;
+                    viewLogo.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            } else {
+                viewLogo.style.display = 'none';
+                viewLogo.src = '';
+            }
+        });
+
+        function formatAndSetDate(dateString) {
+            if(!dateString) {
+                viewDate.innerText = '--/--/----';
+                return;
+            }
+            const [year, month, day] = dateString.split('-');
+            viewDate.innerText = `${day}/${month}/${year}`;
+        }
+    </script>
+</body>
+</html>
