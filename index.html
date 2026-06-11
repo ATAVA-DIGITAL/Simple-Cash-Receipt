@@ -295,7 +295,7 @@
             font-weight: bold;
         }
 
-        /* 🔴 പക്കാ ക്ലീൻ RECEIVED സീൽ (മാറ്റങ്ങൾ വരുത്തിയത് ഇവിടെയാണ്) */
+        /* RECEIVED Seal */
         .seal-container {
             position: absolute;
             right: 170px;
@@ -305,7 +305,7 @@
         .received-seal {
             width: 75px;
             height: 75px;
-            border: 3px double #ef4444; /* ഡബിൾ ബോർഡർ കൊടുത്തു - റിയൽ ലുക്കിന് വേണ്ടി */
+            border: 3px double #ef4444; 
             border-radius: 50%;
             display: flex;
             justify-content: center;
@@ -441,31 +441,32 @@
                 <input type="file" id="logoInput" accept="image/*">
             </div>
 
+            <!-- ⚡ ഇവിടുത്തെ വാല്യൂസ് ഒക്കെ പൂർണ്ണമായും ബ്ലാങ്ക് ആക്കിയിട്ടുണ്ട് -->
             <div class="form-group">
                 <label for="bizName">Business / Shop Name</label>
-                <input type="text" id="bizName" value="MARHABA TYPING AND DOCUMENT CLEARING">
+                <input type="text" id="bizName" placeholder="Enter Business Name...">
             </div>
 
             <div class="form-group">
                 <label for="bizLocation">Location / Place</label>
-                <input type="text" id="bizLocation" value="Old Industrial Area, Umm Al Quwain">
+                <input type="text" id="bizLocation" placeholder="Enter Location/City...">
             </div>
 
             <div class="row">
                 <div class="form-group">
                     <label for="bizMob">Mobile Number</label>
-                    <input type="text" id="bizMob" value="+971 50 XXXXXXX">
+                    <input type="text" id="bizMob" placeholder="Enter Phone No...">
                 </div>
                 <div class="form-group">
                     <label for="bizEmail">Email Address</label>
-                    <input type="email" id="bizEmail" value="info@marhabatyping.com">
+                    <input type="email" id="bizEmail" placeholder="Enter Email...">
                 </div>
             </div>
 
             <div class="row">
                 <div class="form-group">
                     <label for="receiptNo">Receipt No</label>
-                    <input type="text" id="receiptNo" value="101">
+                    <input type="text" id="receiptNo" placeholder="e.g., 101">
                 </div>
                 <div class="form-group">
                     <label for="receiptDate">Date</label>
@@ -475,7 +476,7 @@
 
             <div class="form-group">
                 <label for="custName">Received From (Customer Name)</label>
-                <input type="text" id="custName" value="MUHAMMAD">
+                <input type="text" id="custName" placeholder="Enter customer name...">
             </div>
 
             <!-- Multiple Descriptions Section -->
@@ -491,8 +492,8 @@
                     </thead>
                     <tbody id="inputFieldsContainer">
                         <tr>
-                            <td><input type="text" class="item-desc" value="VISA STAMPING" oninput="updateLivePreview()"></td>
-                            <td><input type="number" class="item-amt" value="500" oninput="updateLivePreview()"></td>
+                            <td><input type="text" class="item-desc" placeholder="e.g., Service Description" oninput="updateLivePreview()"></td>
+                            <td><input type="number" class="item-amt" placeholder="0.00" oninput="updateLivePreview()"></td>
                             <td></td>
                         </tr>
                     </tbody>
@@ -519,10 +520,10 @@
                     <!-- Receipt Header -->
                     <div class="receipt-header">
                         <div class="biz-details">
-                            <h3 id="viewBizName">MARHABA TYPING AND DOCUMENT CLEARING</h3>
+                            <h3 id="viewBizName">BUSINESS NAME</h3>
                             <p id="viewBizLocation" style="font-weight: 600; margin-bottom: 2px;"></p>
                             <p style="font-size: 12px; color: #555;">
-                                <span id="viewBizMob"></span> | <span id="viewBizEmail"></span>
+                                <span id="viewBizMob">Mob: ------</span> | <span id="viewBizEmail">Email: ------</span>
                             </p>
                         </div>
                         <div>
@@ -533,7 +534,7 @@
                     <!-- Receipt Title & Meta -->
                     <div class="receipt-meta">
                         <div>
-                            <p><strong>Receipt No:</strong> <span id="viewReceiptNo">101</span></p>
+                            <p><strong>Receipt No:</strong> <span id="viewReceiptNo">---</span></p>
                         </div>
                         <div class="receipt-title-box">
                             <h2>CASH RECEIPT</h2>
@@ -546,7 +547,7 @@
                     <!-- Receipt Body -->
                     <div class="receipt-body">
                         <div class="customer-row">
-                            Received with thanks from <strong class="line-item" id="viewCustName" style="width: 65%;">MUHAMMAD</strong>
+                            Received with thanks from <strong class="line-item" id="viewCustName" style="width: 65%;">...................................................</strong>
                         </div>
                         
                         <!-- Description Preview Table -->
@@ -580,7 +581,7 @@
                         Powered by <span>ATAVA DST</span>
                     </div>
                     
-                    <!-- 🔴 പക്കാ ക്ലീൻ RECEIVED സീൽ -->
+                    <!-- RECEIVED സീൽ -->
                     <div class="seal-container">
                         <div class="received-seal">
                             <span class="seal-main">RECEIVED</span>
