@@ -8,7 +8,7 @@
         :root {
             --primary-color: #4f46e5; /* Modern Indigo */
             --accent-color: #06b6d4;  /* Vibrant Cyan */
-            --bg-color: #e0e7ff;       /* Soft Blueish Tint */
+            --bg-color: #e0e7ff;       
             --card-bg: #ffffff;
             --text-color: #1e293b;
         }
@@ -21,7 +21,6 @@
         }
 
         body {
-            /* നല്ലൊരു കിടിലൻ കളർഫുൾ ഗ്രേഡിയന്റ് ബാക്ക്ഗ്രൗണ്ട് */
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: var(--text-color);
             padding: 30px 20px;
@@ -132,10 +131,6 @@
             cursor: pointer;
             font-weight: bold;
             margin-top: 10px;
-            transition: transform 0.2s;
-        }
-        .btn-add-row:hover {
-            transform: translateY(-1px);
         }
         .btn-delete-row {
             background-color: #ef4444;
@@ -161,13 +156,13 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
             border: 1px solid rgba(255,255,255,0.2);
             position: relative;
-            min-height: 550px;
+            min-height: 570px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
 
-        /* Receipt Header - കളർഫുൾ മാറ്റങ്ങൾ */
+        /* Receipt Header */
         .receipt-header {
             display: flex;
             justify-content: space-between;
@@ -279,25 +274,13 @@
             font-weight: 500;
         }
 
-        /* Footer & Branding */
+        /* Footer & Branding & Seal Area */
         .receipt-footer {
             margin-top: 35px;
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-        }
-
-        .signature {
-            text-align: center;
-            width: 160px;
-        }
-
-        .sig-line {
-            border-top: 2px solid #475569;
-            margin-top: 45px;
-            font-size: 13px;
-            color: #475569;
-            font-weight: 600;
+            position: relative;
         }
 
         .atava-branding {
@@ -311,6 +294,61 @@
         .atava-branding span {
             color: var(--primary-color);
             font-weight: bold;
+        }
+
+        /* 🔴 പെർമനന്റ് RECEIVED റൗണ്ട് സീൽ ഡിസൈൻ */
+        .seal-container {
+            position: absolute;
+            right: 170px;
+            bottom: 0px;
+        }
+
+        .received-seal {
+            width: 75px;
+            height: 75px;
+            border: 3px dashed #ef4444; /* നല്ല ചുവപ്പ് കളർ ഡാഷ്‌ഡ് ബോർഡർ */
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transform: rotate(-15deg); /* യഥാർത്ഥ സീൽ അടിക്കുന്നത് പോലെ ചെറിയൊരു ചരിവ് */
+            opacity: 0.85;
+            background-color: rgba(254, 226, 226, 0.4);
+            box-shadow: 0 0 4px rgba(239, 68, 68, 0.2);
+        }
+
+        .seal-text-top, .seal-text-bottom {
+            font-size: 8px;
+            font-weight: 800;
+            color: #ef4444;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .seal-main {
+            font-size: 11px;
+            font-weight: 900;
+            color: #ef4444;
+            border-top: 1px solid #ef4444;
+            border-bottom: 1px solid #ef4444;
+            padding: 1px 4px;
+            margin: 2px 0;
+            letter-spacing: 1px;
+        }
+
+        .signature {
+            text-align: center;
+            width: 150px;
+            z-index: 2; /* സീലിന്റെ മുകളിൽ വരാൻ വേണ്ടി */
+        }
+
+        .sig-line {
+            border-top: 2px solid #475569;
+            margin-top: 45px;
+            font-size: 13px;
+            color: #475569;
+            font-weight: 600;
         }
 
         /* Action Buttons */
@@ -334,7 +372,6 @@
 
         .btn-print:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 25px rgba(16, 185, 129, 0.4);
         }
 
         /* Responsive */
@@ -347,7 +384,7 @@
             }
         }
 
-        /* PRINT STYLES - പ്രിന്റ് ചെയ്യുമ്പോൾ സാധാരണ ബ്ലാക്ക് ആൻഡ് വൈറ്റ് ലുക്കിലേക്ക് മാറും (മഷി ലാഭിക്കാൻ) */
+        /* 👑 PRINT STYLES - പ്രിന്റിലും PDF-ലും കളർ ഒട്ടും നഷ്ടപ്പെടില്ല! */
         @media print {
             @page {
                 margin-top: 10mm; 
@@ -356,6 +393,9 @@
             body {
                 background: #fff !important;
                 padding: 0;
+                /* ഫോഴ്സ് കളർ പ്രിന്റിംഗ് ഓപ്ഷൻ */
+                -webkit-print-color-adjust: exact !important; 
+                print-color-adjust: exact !important;
             }
             .form-section, header, .actions, .btn-add-row, .btn-delete-row {
                 display: none !important;
@@ -369,33 +409,29 @@
             }
             .receipt-box {
                 box-shadow: none !important;
-                border: 2px solid #000 !important;
-                padding: 20px;
-                border-radius: 0;
+                border: 2px solid var(--primary-color) !important;
+                padding: 25px;
+                border-radius: 12px;
                 min-height: auto;
-            }
-            .receipt-header {
-                border-bottom: 3px solid #000 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
             .receipt-meta {
-                background: none !important;
-                border-left: 4px solid #000 !important;
-                padding: 5px;
+                background-color: #f8fafc !important;
+                border-left: 4px solid var(--accent-color) !important;
             }
             .preview-items-table th {
-                background: #f2f2f2 !important;
-                border-top: 2px solid #000 !important;
-                border-bottom: 2px solid #000 !important;
-                color: #000 !important;
+                background-color: #f1f5f9 !important;
+                color: #1e3a8a !important;
             }
             .preview-items-table .total-tr {
-                background: none !important;
-                border-top: 2px solid #000 !important;
-                border-bottom: 3px double #000 !important;
-                color: #000 !important;
+                background-color: #eff6ff !important;
+                color: #1e40af !important;
             }
-            .biz-details h3, .receipt-title-box h2 {
-                color: #000 !important;
+            .received-seal {
+                background-color: rgba(254, 226, 226, 0.4) !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
         }
     </style>
@@ -536,11 +572,21 @@
                     </div>
                 </div>
 
-                <!-- Receipt Footer & Branding -->
+                <!-- Receipt Footer & Branding & Seal -->
                 <div class="receipt-footer">
                     <div class="atava-branding">
                         Powered by <span>ATAVA DST</span>
                     </div>
+                    
+                    <!-- 🔴 റൗണ്ട് RECEIVED സീൽ ഡിസൈൻ -->
+                    <div class="seal-container">
+                        <div class="received-seal">
+                            <span class="seal-text-top">Official</span>
+                            <span class="seal-main">RECEIVED</span>
+                            <span class="seal-text-bottom">Cash/Online</span>
+                        </div>
+                    </div>
+
                     <div class="signature">
                         <div class="sig-line">Authorized Signatory</div>
                     </div>
@@ -661,7 +707,7 @@
             document.getElementById('viewTotalAmount').innerText = total.toFixed(2);
         }
 
-        // പ്രിന്റ് ഹാൻഡ്‌ലർ ഫങ്ക്ഷൻ 
+        // പ്രിന്റ് ഹാൻഡ്‌ലർ ഫങ്ക്ഷൻ
         function handlePrint() {
             const originalTitle = document.title;
             document.title = ""; 
