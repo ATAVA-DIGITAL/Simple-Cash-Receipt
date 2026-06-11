@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- ഇവിടെ ടൈറ്റിൽ മാറ്റിയതുവഴി പ്രിന്റ് ചെയ്യുമ്പോൾ മുകളിൽ ഇടതുവശത്ത് വരുന്നത് ഇല്ലാതാകും -->
-    <title> </title>
+    <title>Simple Cash Receipt Generator - ATAVA DST</title>
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --accent-color: #3498db;
-            --bg-color: #f5f7fa;
+            --primary-color: #4f46e5; /* Modern Indigo */
+            --accent-color: #06b6d4;  /* Vibrant Cyan */
+            --bg-color: #e0e7ff;       /* Soft Blueish Tint */
             --card-bg: #ffffff;
-            --text-color: #333;
+            --text-color: #1e293b;
         }
 
         * {
@@ -22,9 +21,11 @@
         }
 
         body {
-            background-color: var(--bg-color);
+            /* നല്ലൊരു കിടിലൻ കളർഫുൾ ഗ്രേഡിയന്റ് ബാക്ക്ഗ്രൗണ്ട് */
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: var(--text-color);
-            padding: 20px;
+            padding: 30px 20px;
+            min-height: 100vh;
         }
 
         .container {
@@ -38,60 +39,67 @@
         header {
             grid-column: span 2;
             text-align: center;
-            padding: 10px 0 20px 0;
+            padding: 10px 0 30px 0;
         }
 
         header h1 {
-            color: var(--primary-color);
-            font-size: 28px;
-            margin-bottom: 5px;
+            color: #ffffff;
+            font-size: 36px;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            letter-spacing: 1px;
         }
 
         header p {
-            color: #666;
-            font-size: 14px;
+            color: #e0e7ff;
+            font-size: 16px;
+            font-weight: 500;
         }
 
         /* Form Styling */
         .form-section {
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            backdrop-filter: blur(5px);
         }
 
         .form-section h2 {
-            margin-bottom: 20px;
-            color: var(--primary-color);
-            border-bottom: 2px solid var(--bg-color);
-            padding-bottom: 10px;
-            font-size: 20px;
+            margin-bottom: 25px;
+            color: #4338ca;
+            border-bottom: 3px solid #e0e7ff;
+            padding-bottom: 12px;
+            font-size: 22px;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             font-weight: 600;
             font-size: 14px;
-            color: #555;
+            color: #475569;
         }
 
         .form-group input, .form-group textarea, .form-group select {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
+            padding: 12px;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
             font-size: 14px;
-            transition: border 0.3s;
+            transition: all 0.3s;
+            background-color: #f8fafc;
         }
 
         .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
             outline: none;
-            border-color: var(--accent-color);
+            border-color: var(--primary-color);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
         }
 
         .row {
@@ -106,27 +114,37 @@
             margin-top: 10px;
             border-collapse: collapse;
         }
-        .items-table-input th, .items-table-input td {
+        .items-table-input th {
             padding: 8px;
             text-align: left;
+            color: #64748b;
+            font-size: 13px;
+        }
+        .items-table-input td {
+            padding: 6px 4px;
         }
         .btn-add-row {
-            background-color: var(--accent-color);
+            background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
             color: white;
             border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
+            padding: 8px 16px;
+            border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
             margin-top: 10px;
+            transition: transform 0.2s;
+        }
+        .btn-add-row:hover {
+            transform: translateY(-1px);
         }
         .btn-delete-row {
-            background-color: #e74c3c;
+            background-color: #ef4444;
             color: white;
             border: none;
-            padding: 6px 10px;
-            border-radius: 4px;
+            padding: 8px 12px;
+            border-radius: 6px;
             cursor: pointer;
+            font-weight: bold;
         }
 
         /* Preview Styling */
@@ -138,44 +156,47 @@
 
         .receipt-box {
             background: #fff;
-            padding: 30px;
-            border-radius: 4px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border: 1px solid #e0e0e0;
+            padding: 35px;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.2);
             position: relative;
-            min-height: 520px;
+            min-height: 550px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
 
-        /* Receipt Header */
+        /* Receipt Header - കളർഫുൾ മാറ്റങ്ങൾ */
         .receipt-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            border-bottom: 2px solid #333;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 18px;
+            margin-bottom: 25px;
         }
 
         .biz-details h3 {
-            font-size: 22px;
-            color: #111;
+            font-size: 24px;
+            color: #312e81;
             text-transform: uppercase;
+            font-weight: 800;
         }
 
         .biz-details p {
             font-size: 13px;
-            color: #555;
-            margin-top: 3px;
+            color: #475569;
+            margin-top: 4px;
             white-space: pre-line;
+            font-weight: 500;
         }
 
         .receipt-logo {
-            max-width: 100px;
-            max-height: 80px;
+            max-width: 110px;
+            max-height: 85px;
             object-fit: contain;
+            border-radius: 6px;
         }
 
         .receipt-title-box {
@@ -183,17 +204,22 @@
         }
 
         .receipt-title-box h2 {
-            font-size: 24px;
+            font-size: 26px;
             color: var(--primary-color);
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+            font-weight: 800;
         }
 
         /* Receipt Meta */
         .receipt-meta {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             font-size: 14px;
+            background-color: #f8fafc;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
         }
 
         /* Receipt Body */
@@ -201,53 +227,61 @@
             font-size: 15px;
             line-height: 1.8;
             flex-grow: 1;
+            color: #334155;
         }
 
         .customer-row {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            font-size: 16px;
         }
 
         .line-item {
-            border-bottom: 1px dashed #ccc;
+            border-bottom: 2px dashed #cbd5e1;
             display: inline-block;
             padding-left: 5px;
+            color: #0f172a;
         }
 
         /* Items Preview Table */
         .preview-items-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
-            margin-bottom: 15px;
+            margin-top: 20px;
+            margin-bottom: 20px;
         }
         .preview-items-table th {
-            background-color: #f8f9fa;
-            border-top: 1px solid #333;
-            border-bottom: 1px solid #333;
-            padding: 8px;
-            font-weight: 600;
+            background-color: #f1f5f9;
+            border-top: 2px solid var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding: 10px;
+            font-weight: 700;
             font-size: 14px;
+            color: #1e3a8a;
         }
         .preview-items-table td {
-            border-bottom: 1px dashed #e0e0e0;
-            padding: 8px;
+            border-bottom: 1px dashed #e2e8f0;
+            padding: 10px;
             font-size: 14px;
+            color: #334155;
         }
         .preview-items-table .total-tr {
-            border-top: 1px solid #333;
-            border-bottom: 2px double #333;
+            border-top: 2px solid var(--primary-color);
+            border-bottom: 3px double var(--primary-color);
             font-weight: bold;
-            font-size: 16px;
+            font-size: 18px;
+            background-color: #eff6ff;
+            color: #1e40af;
         }
 
         .payment-method-box {
-            margin-top: 10px;
+            margin-top: 15px;
             font-size: 14px;
+            font-weight: 500;
         }
 
         /* Footer & Branding */
         .receipt-footer {
-            margin-top: 30px;
+            margin-top: 35px;
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
@@ -255,50 +289,52 @@
 
         .signature {
             text-align: center;
-            width: 150px;
+            width: 160px;
         }
 
         .sig-line {
-            border-top: 1px solid #333;
-            margin-top: 40px;
-            font-size: 12px;
-            color: #555;
+            border-top: 2px solid #475569;
+            margin-top: 45px;
+            font-size: 13px;
+            color: #475569;
+            font-weight: 600;
         }
 
         .atava-branding {
-            font-size: 11px;
-            color: #999;
+            font-size: 12px;
+            color: #94a3b8;
             text-align: left;
-            font-weight: 500;
+            font-weight: 600;
             letter-spacing: 0.5px;
         }
 
         .atava-branding span {
-            color: var(--accent-color);
+            color: var(--primary-color);
             font-weight: bold;
         }
 
         /* Action Buttons */
         .actions {
-            margin-top: 20px;
+            margin-top: 25px;
             text-align: right;
         }
 
         .btn-print {
-            background-color: #2ecc71;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
             border: none;
-            padding: 12px 30px;
-            font-size: 16px;
+            padding: 14px 35px;
+            font-size: 18px;
             font-weight: bold;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: background 0.2s;
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+            transition: all 0.3s;
         }
 
         .btn-print:hover {
-            background-color: #27ae60;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(16, 185, 129, 0.4);
         }
 
         /* Responsive */
@@ -311,10 +347,14 @@
             }
         }
 
-        /* PRINT STYLES */
+        /* PRINT STYLES - പ്രിന്റ് ചെയ്യുമ്പോൾ സാധാരണ ബ്ലാക്ക് ആൻഡ് വൈറ്റ് ലുക്കിലേക്ക് മാറും (മഷി ലാഭിക്കാൻ) */
         @media print {
+            @page {
+                margin-top: 10mm; 
+                margin-bottom: 10mm;
+            }
             body {
-                background-color: #fff;
+                background: #fff !important;
                 padding: 0;
             }
             .form-section, header, .actions, .btn-add-row, .btn-delete-row {
@@ -329,9 +369,33 @@
             }
             .receipt-box {
                 box-shadow: none !important;
-                border: 1px solid #000 !important;
+                border: 2px solid #000 !important;
                 padding: 20px;
                 border-radius: 0;
+                min-height: auto;
+            }
+            .receipt-header {
+                border-bottom: 3px solid #000 !important;
+            }
+            .receipt-meta {
+                background: none !important;
+                border-left: 4px solid #000 !important;
+                padding: 5px;
+            }
+            .preview-items-table th {
+                background: #f2f2f2 !important;
+                border-top: 2px solid #000 !important;
+                border-bottom: 2px solid #000 !important;
+                color: #000 !important;
+            }
+            .preview-items-table .total-tr {
+                background: none !important;
+                border-top: 2px solid #000 !important;
+                border-bottom: 3px double #000 !important;
+                color: #000 !important;
+            }
+            .biz-details h3, .receipt-title-box h2 {
+                color: #000 !important;
             }
         }
     </style>
@@ -485,7 +549,7 @@
             </div>
 
             <div class="actions">
-                <button class="btn-print" onclick="window.print()">Print / Save PDF</button>
+                <button class="btn-print" onclick="handlePrint()">Print / Save PDF</button>
             </div>
         </div>
     </div>
@@ -567,7 +631,6 @@
 
         // Core Function to Synchronize and Update Preview
         function updateLivePreview() {
-            // Text values
             viewBizName.innerText = bizName.value || 'BUSINESS NAME';
             viewBizAddress.innerText = bizAddress.value || 'Address...';
             viewReceiptNo.innerText = receiptNo.value || '---';
@@ -575,12 +638,11 @@
             viewPayMethod.innerText = payMethod.value;
             viewDate.innerText = formatCustomDate(receiptDate.value);
 
-            // Handle Dynamic Rows & Total Calculation
             const descs = document.querySelectorAll('.item-desc');
             const amts = document.querySelectorAll('.item-amt');
             const previewContainer = document.getElementById('previewItemsContainer');
             
-            previewContainer.innerHTML = ''; // clear preview rows
+            previewContainer.innerHTML = ''; 
             let total = 0;
 
             descs.forEach((descInput, index) => {
@@ -597,6 +659,16 @@
             });
 
             document.getElementById('viewTotalAmount').innerText = total.toFixed(2);
+        }
+
+        // പ്രിന്റ് ഹാൻഡ്‌ലർ ഫങ്ക്ഷൻ 
+        function handlePrint() {
+            const originalTitle = document.title;
+            document.title = ""; 
+            window.print(); 
+            setTimeout(() => {
+                document.title = originalTitle;
+            }, 100);
         }
 
         // Initial trigger on setup load
