@@ -295,45 +295,36 @@
             font-weight: bold;
         }
 
-        /* RECEIVED Seal */
+        /* 🔴 പക്കാ ക്ലീൻ RECEIVED സീൽ (മാറ്റങ്ങൾ വരുത്തിയത് ഇവിടെയാണ്) */
         .seal-container {
             position: absolute;
             right: 170px;
-            bottom: 0px;
+            bottom: -5px;
         }
 
         .received-seal {
             width: 75px;
             height: 75px;
-            border: 3px dashed #ef4444; 
+            border: 3px double #ef4444; /* ഡബിൾ ബോർഡർ കൊടുത്തു - റിയൽ ലുക്കിന് വേണ്ടി */
             border-radius: 50%;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            transform: rotate(-15deg); 
+            transform: rotate(-12deg); 
             opacity: 0.85;
-            background-color: rgba(254, 226, 226, 0.4);
-            box-shadow: 0 0 4px rgba(239, 68, 68, 0.2);
-        }
-
-        .seal-text-top, .seal-text-bottom {
-            font-size: 8px;
-            font-weight: 800;
-            color: #ef4444;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
+            background-color: rgba(254, 226, 226, 0.3);
+            box-shadow: 0 0 4px rgba(239, 68, 68, 0.1);
         }
 
         .seal-main {
-            font-size: 11px;
+            font-size: 13px;
             font-weight: 900;
             color: #ef4444;
-            border-top: 1px solid #ef4444;
-            border-bottom: 1px solid #ef4444;
-            padding: 1px 4px;
-            margin: 2px 0;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            border-top: 2px solid #ef4444;
+            border-bottom: 2px solid #ef4444;
+            padding: 2px 5px;
         }
 
         .signature {
@@ -426,7 +417,7 @@
                 color: #1e40af !important;
             }
             .received-seal {
-                background-color: rgba(254, 226, 226, 0.4) !important;
+                background-color: rgba(254, 226, 226, 0.3) !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
@@ -455,7 +446,6 @@
                 <input type="text" id="bizName" value="MARHABA TYPING AND DOCUMENT CLEARING">
             </div>
 
-            <!-- ⚡ പുതിയ ലൊക്കേഷൻ, മൊബൈൽ, ഇമെയിൽ ഇൻപുട്ടുകൾ -->
             <div class="form-group">
                 <label for="bizLocation">Location / Place</label>
                 <input type="text" id="bizLocation" value="Old Industrial Area, Umm Al Quwain">
@@ -530,7 +520,6 @@
                     <div class="receipt-header">
                         <div class="biz-details">
                             <h3 id="viewBizName">MARHABA TYPING AND DOCUMENT CLEARING</h3>
-                            <!-- ⚡ ഇതാ ഇവിടെ ഒരുമിച്ച് ഭംഗിയായി കാണിക്കും -->
                             <p id="viewBizLocation" style="font-weight: 600; margin-bottom: 2px;"></p>
                             <p style="font-size: 12px; color: #555;">
                                 <span id="viewBizMob"></span> | <span id="viewBizEmail"></span>
@@ -591,12 +580,10 @@
                         Powered by <span>ATAVA DST</span>
                     </div>
                     
-                    <!-- റൗണ്ട് RECEIVED സീൽ ഡിസൈൻ -->
+                    <!-- 🔴 പക്കാ ക്ലീൻ RECEIVED സീൽ -->
                     <div class="seal-container">
                         <div class="received-seal">
-                            <span class="seal-text-top">Official</span>
                             <span class="seal-main">RECEIVED</span>
-                            <span class="seal-text-bottom">Cash/Online</span>
                         </div>
                     </div>
 
