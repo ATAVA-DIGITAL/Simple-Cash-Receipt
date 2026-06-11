@@ -6,8 +6,8 @@
     <title>Simple Cash Receipt Generator - ATAVA DST</title>
     <style>
         :root {
-            --primary-color: #4f46e5; /* Modern Indigo */
-            --accent-color: #06b6d4;  /* Vibrant Cyan */
+            --primary-color: #4f46e5; 
+            --accent-color: #06b6d4;  
             --bg-color: #e0e7ff;       
             --card-bg: #ffffff;
             --text-color: #1e293b;
@@ -183,7 +183,6 @@
             font-size: 13px;
             color: #475569;
             margin-top: 4px;
-            white-space: pre-line;
             font-weight: 500;
         }
 
@@ -296,7 +295,7 @@
             font-weight: bold;
         }
 
-        /* 🔴 പെർമനന്റ് RECEIVED റൗണ്ട് സീൽ ഡിസൈൻ */
+        /* RECEIVED Seal */
         .seal-container {
             position: absolute;
             right: 170px;
@@ -306,13 +305,13 @@
         .received-seal {
             width: 75px;
             height: 75px;
-            border: 3px dashed #ef4444; /* നല്ല ചുവപ്പ് കളർ ഡാഷ്‌ഡ് ബോർഡർ */
+            border: 3px dashed #ef4444; 
             border-radius: 50%;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            transform: rotate(-15deg); /* യഥാർത്ഥ സീൽ അടിക്കുന്നത് പോലെ ചെറിയൊരു ചരിവ് */
+            transform: rotate(-15deg); 
             opacity: 0.85;
             background-color: rgba(254, 226, 226, 0.4);
             box-shadow: 0 0 4px rgba(239, 68, 68, 0.2);
@@ -340,7 +339,7 @@
         .signature {
             text-align: center;
             width: 150px;
-            z-index: 2; /* സീലിന്റെ മുകളിൽ വരാൻ വേണ്ടി */
+            z-index: 2; 
         }
 
         .sig-line {
@@ -374,7 +373,6 @@
             transform: translateY(-2px);
         }
 
-        /* Responsive */
         @media (max-width: 950px) {
             .container {
                 grid-template-columns: 1fr;
@@ -384,7 +382,7 @@
             }
         }
 
-        /* 👑 PRINT STYLES - പ്രിന്റിലും PDF-ലും കളർ ഒട്ടും നഷ്ടപ്പെടില്ല! */
+        /* PRINT STYLES */
         @media print {
             @page {
                 margin-top: 10mm; 
@@ -393,7 +391,6 @@
             body {
                 background: #fff !important;
                 padding: 0;
-                /* ഫോഴ്സ് കളർ പ്രിന്റിംഗ് ഓപ്ഷൻ */
                 -webkit-print-color-adjust: exact !important; 
                 print-color-adjust: exact !important;
             }
@@ -455,12 +452,24 @@
 
             <div class="form-group">
                 <label for="bizName">Business / Shop Name</label>
-                <input type="text" id="bizName" placeholder="e.g., Marhaba Typing" value="MARHABA TYPING AND DOCUMENT CLEARING">
+                <input type="text" id="bizName" value="MARHABA TYPING AND DOCUMENT CLEARING">
             </div>
 
+            <!-- ⚡ പുതിയ ലൊക്കേഷൻ, മൊബൈൽ, ഇമെയിൽ ഇൻപുട്ടുകൾ -->
             <div class="form-group">
-                <label for="bizAddress">Address & Contact Info</label>
-                <textarea id="bizAddress" rows="2" placeholder="Street, City, Phone No">UMM AL QUWAIN</textarea>
+                <label for="bizLocation">Location / Place</label>
+                <input type="text" id="bizLocation" value="Old Industrial Area, Umm Al Quwain">
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label for="bizMob">Mobile Number</label>
+                    <input type="text" id="bizMob" value="+971 50 XXXXXXX">
+                </div>
+                <div class="form-group">
+                    <label for="bizEmail">Email Address</label>
+                    <input type="email" id="bizEmail" value="info@marhabatyping.com">
+                </div>
             </div>
 
             <div class="row">
@@ -476,7 +485,7 @@
 
             <div class="form-group">
                 <label for="custName">Received From (Customer Name)</label>
-                <input type="text" id="custName" placeholder="Enter customer name" value="MUHAMMAD">
+                <input type="text" id="custName" value="MUHAMMAD">
             </div>
 
             <!-- Multiple Descriptions Section -->
@@ -492,8 +501,8 @@
                     </thead>
                     <tbody id="inputFieldsContainer">
                         <tr>
-                            <td><input type="text" class="item-desc" placeholder="e.g., VISA STAMPING" value="VISA STAMPING"></td>
-                            <td><input type="number" class="item-amt" placeholder="0.00" value="500" oninput="updateLivePreview()"></td>
+                            <td><input type="text" class="item-desc" value="VISA STAMPING" oninput="updateLivePreview()"></td>
+                            <td><input type="number" class="item-amt" value="500" oninput="updateLivePreview()"></td>
                             <td></td>
                         </tr>
                     </tbody>
@@ -521,7 +530,11 @@
                     <div class="receipt-header">
                         <div class="biz-details">
                             <h3 id="viewBizName">MARHABA TYPING AND DOCUMENT CLEARING</h3>
-                            <p id="viewBizAddress">UMM AL QUWAIN</p>
+                            <!-- ⚡ ഇതാ ഇവിടെ ഒരുമിച്ച് ഭംഗിയായി കാണിക്കും -->
+                            <p id="viewBizLocation" style="font-weight: 600; margin-bottom: 2px;"></p>
+                            <p style="font-size: 12px; color: #555;">
+                                <span id="viewBizMob"></span> | <span id="viewBizEmail"></span>
+                            </p>
                         </div>
                         <div>
                             <img id="viewLogo" class="receipt-logo" src="" alt="" style="display: none;">
@@ -578,7 +591,7 @@
                         Powered by <span>ATAVA DST</span>
                     </div>
                     
-                    <!-- 🔴 റൗണ്ട് RECEIVED സീൽ ഡിസൈൻ -->
+                    <!-- റൗണ്ട് RECEIVED സീൽ ഡിസൈൻ -->
                     <div class="seal-container">
                         <div class="received-seal">
                             <span class="seal-text-top">Official</span>
@@ -607,7 +620,9 @@
 
         // Input Elements
         const bizName = document.getElementById('bizName');
-        const bizAddress = document.getElementById('bizAddress');
+        const bizLocation = document.getElementById('bizLocation');
+        const bizMob = document.getElementById('bizMob');
+        const bizEmail = document.getElementById('bizEmail');
         const receiptNo = document.getElementById('receiptNo');
         const receiptDate = document.getElementById('receiptDate');
         const custName = document.getElementById('custName');
@@ -616,7 +631,9 @@
 
         // Preview Elements
         const viewBizName = document.getElementById('viewBizName');
-        const viewBizAddress = document.getElementById('viewBizAddress');
+        const viewBizLocation = document.getElementById('viewBizLocation');
+        const viewBizMob = document.getElementById('viewBizMob');
+        const viewBizEmail = document.getElementById('viewBizEmail');
         const viewReceiptNo = document.getElementById('viewReceiptNo');
         const viewDate = document.getElementById('viewDate');
         const viewCustName = document.getElementById('viewCustName');
@@ -625,7 +642,9 @@
 
         // Event Listeners for Live Updates
         bizName.addEventListener('input', updateLivePreview);
-        bizAddress.addEventListener('input', updateLivePreview);
+        bizLocation.addEventListener('input', updateLivePreview);
+        bizMob.addEventListener('input', updateLivePreview);
+        bizEmail.addEventListener('input', updateLivePreview);
         receiptNo.addEventListener('input', updateLivePreview);
         custName.addEventListener('input', updateLivePreview);
         payMethod.addEventListener('change', updateLivePreview);
@@ -678,7 +697,10 @@
         // Core Function to Synchronize and Update Preview
         function updateLivePreview() {
             viewBizName.innerText = bizName.value || 'BUSINESS NAME';
-            viewBizAddress.innerText = bizAddress.value || 'Address...';
+            viewBizLocation.innerText = bizLocation.value ? bizLocation.value : '';
+            viewBizMob.innerText = bizMob.value ? "Mob: " + bizMob.value : 'Mob: ------';
+            viewBizEmail.innerText = bizEmail.value ? "Email: " + bizEmail.value : 'Email: ------';
+            
             viewReceiptNo.innerText = receiptNo.value || '---';
             viewCustName.innerText = custName.value || '...................................................';
             viewPayMethod.innerText = payMethod.value;
