@@ -172,7 +172,6 @@
             margin-bottom: 25px;
         }
 
-        /* ⚡ ബിസിനസ്സ് പേര് എപ്പോഴും കാപ്പിറ്റൽ ലെറ്റർ ആകാൻ */
         .biz-details h3 {
             font-size: 24px;
             color: #312e81;
@@ -180,7 +179,6 @@
             font-weight: 800;
         }
 
-        /* ⚡ ലൊക്കേഷൻ, ഇമെയിൽ ഒക്കെ അപ്പർകേസ് ആകാൻ */
         .biz-details p, #viewBizLocation {
             font-size: 13px;
             color: #475569;
@@ -232,7 +230,6 @@
             font-size: 16px;
         }
 
-        /* ⚡ കസ്റ്റമർ പേര് എപ്പോഴും കാപ്പിറ്റൽ ലെറ്റർ ആകാൻ */
         .line-item {
             border-bottom: 2px dashed #cbd5e1;
             display: inline-block;
@@ -258,7 +255,6 @@
             color: #1e3a8a;
         }
         
-        /* ⚡ ഡിസ്ക്രിപ്ഷൻ ഐറ്റംസ് എപ്പോഴും കാപ്പിറ്റൽ ലെറ്റർ ആകാൻ */
         .preview-items-table td {
             border-bottom: 1px dashed #e2e8f0;
             padding: 10px;
@@ -355,15 +351,17 @@
         /* Action Buttons */
         .actions {
             margin-top: 25px;
-            text-align: right;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
         }
 
         .btn-print {
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
             border: none;
-            padding: 14px 35px;
-            font-size: 18px;
+            padding: 14px 25px;
+            font-size: 16px;
             font-weight: bold;
             border-radius: 8px;
             cursor: pointer;
@@ -371,7 +369,21 @@
             transition: all 0.3s;
         }
 
-        .btn-print:hover {
+        /* ⚡ വാട്സാപ്പ് ബട്ടൺ സ്റ്റൈൽ */
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);
+            transition: all 0.3s;
+        }
+
+        .btn-print:hover, .btn-whatsapp:hover {
             transform: translateY(-2px);
         }
 
@@ -381,6 +393,9 @@
             }
             header {
                 grid-column: span 1;
+            }
+            .actions {
+                flex-direction: column;
             }
         }
 
@@ -484,9 +499,16 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="custName">Received From (Customer Name)</label>
-                <input type="text" id="custName" placeholder="Enter customer name...">
+            <div class="row">
+                <div class="form-group">
+                    <label for="custName">Received From (Customer Name)</label>
+                    <input type="text" id="custName" placeholder="Enter customer name...">
+                </div>
+                <!-- ⚡ കസ്റ്റമറുടെ വാട്സാപ്പ് നമ്പർ ഇൻപുട്ട് ഫീൽഡ് -->
+                <div class="form-group">
+                    <label for="custWhatsapp">Customer WhatsApp No (With Country Code)</label>
+                    <input type="text" id="custWhatsapp" placeholder="e.g., 919876543210">
+                </div>
             </div>
 
             <!-- Multiple Descriptions Section -->
@@ -591,7 +613,7 @@
                         Powered by <span>ATAVA DST</span>
                     </div>
                     
-                    <!-- RECEIVED සීල් -->
+                    <!-- RECEIVED Seal -->
                     <div class="seal-container">
                         <div class="received-seal">
                             <span class="seal-main">RECEIVED</span>
@@ -606,6 +628,8 @@
             </div>
 
             <div class="actions">
+                <!-- ⚡ വാട്സാപ്പ് അയക്കാനുള്ള പുതിയ ബട്ടൺ -->
+                <button class="btn-whatsapp" onclick="sendWhatsAppReceipt()">Send via WhatsApp</button>
                 <button class="btn-print" onclick="handlePrint()">Print / Save PDF</button>
             </div>
         </div>
@@ -624,6 +648,7 @@
         const receiptNo = document.getElementById('receiptNo');
         const receiptDate = document.getElementById('receiptDate');
         const custName = document.getElementById('custName');
+        const custWhatsapp = document.getElementById('custWhatsapp');
         const payMethod = document.getElementById('payMethod');
         const logoInput = document.getElementById('logoInput');
 
@@ -725,6 +750,53 @@
             });
 
             document.getElementById('viewTotalAmount').innerText = total.toFixed(2);
+        }
+
+        // ⚡ വാട്സാപ്പിലേക്ക് മെസ്സേജ് ഫോർമാറ്റ് ചെയ്ത് അയക്കാനുള്ള ഫങ്ക്ഷൻ
+        function sendWhatsAppReceipt() {
+            const phone = custWhatsapp.value.trim();
+            if (!phone) {
+                alert("Please enter the Customer's WhatsApp Number first!");
+                return;
+            }
+
+            const bName = (bizName.value || 'Our Business').toUpperCase();
+            const cName = (custName.value || 'Customer').toUpperCase();
+            const rNo = receiptNo.value || '---';
+            const rDate = formatCustomDate(receiptDate.value);
+            const pMethod = payMethod.value;
+            const totalAmt = document.getElementById('viewTotalAmount').innerText;
+
+            // ഐറ്റംസ് ലിസ്റ്റ് ഫോർമാറ്റ് ചെയ്യുന്നു
+            const descs = document.querySelectorAll('.item-desc');
+            const amts = document.querySelectorAll('.item-amt');
+            let itemsText = '';
+            
+            descs.forEach((descInput, index) => {
+                const d = descInput.value || 'Service';
+                const a = parseFloat(amts[index].value) || 0;
+                itemsText += `▪️ ${d.toUpperCase()}:  ${a.toFixed(2)}\n`;
+            });
+
+            // വാട്സാപ്പ് മെസ്സേജ് ടെംപ്ലേറ്റ് (Bold & Space ഒക്കെ സെറ്റ് ആക്കിയത്)
+            const message = `*CASH RECEIPT* \n` +
+                            `----------------------------------\n` +
+                            `🏢 *${bName}*\n` +
+                            `📍 ${bizLocation.value.toUpperCase() || ''}\n` +
+                            `----------------------------------\n` +
+                            `🧾 *Receipt No:* ${rNo}\n` +
+                            `📅 *Date:* ${rDate}\n` +
+                            `👤 *Customer:* ${cName}\n` +
+                            `----------------------------------\n` +
+                            `*PARTICULARS:*\n${itemsText}` +
+                            `----------------------------------\n` +
+                            `💰 *TOTAL AMOUNT:  ${totalAmt}*\n` +
+                            `💳 *Payment Method:* ${pMethod}\n\n` +
+                            `🙏 *Thank you for your business!*`;
+
+            // ലിങ്ക് ജനറേറ്റ് ചെയ്ത് പുതിയ ടാബിൽ ഓപ്പൺ ചെയ്യുന്നു
+            const whatsappUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
         }
 
         // പ്രിന്റ് ഹാൻഡ്‌ലർ ഫങ്ക്ഷൻ
