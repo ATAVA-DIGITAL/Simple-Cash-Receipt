@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Cash Receipt Generator - ATAVA DST</title>
+    <title>Simple Cash Receipt Generator</title>
+    <!-- ⚡ മൊബൈലിൽ പക്കാ PDF ഡൗൺലോഡ് ആവാൻ വേണ്ടിയുള്ള മാന്ത്രിക ലൈബ്രറി -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
     <style>
         :root {
-            --primary-color: #4f46e5; 
-            --accent-color: #06b6d4;  
-            --bg-color: #e0e7ff;       
-            --card-bg: #ffffff;
-            --text-color: #1e293b;
+            --primary: #0f172a;
+            --accent: #2563eb;
+            --bg: #f8fafc;
         }
 
         * {
@@ -21,796 +22,413 @@
         }
 
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: var(--text-color);
-            padding: 30px 20px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+            padding: 30px 15px;
             min-height: 100vh;
+            color: #334155;
         }
 
-        .container {
-            max-width: 1300px;
+        .main-container {
+            max-width: 1200px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 1fr 1.2fr;
+            grid-template-columns: 1fr 1fr;
             gap: 30px;
         }
 
-        header {
-            grid-column: span 2;
-            text-align: center;
-            padding: 10px 0 30px 0;
-        }
-
-        header h1 {
-            color: #ffffff;
-            font-size: 36px;
-            margin-bottom: 8px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            letter-spacing: 1px;
-        }
-
-        header p {
-            color: #e0e7ff;
-            font-size: 16px;
-            font-weight: 500;
-        }
-
-        /* Form Styling */
-        .form-section {
-            background: rgba(255, 255, 255, 0.95);
+        .form-box {
+            background: #ffffff;
             padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            backdrop-filter: blur(5px);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
 
-        .form-section h2 {
-            margin-bottom: 25px;
-            color: #4338ca;
-            border-bottom: 3px solid #e0e7ff;
-            padding-bottom: 12px;
-            font-size: 22px;
-        }
-
-        .form-group {
+        .form-box h2 {
             margin-bottom: 20px;
+            color: var(--primary);
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+            font-size: 20px;
         }
 
-        .form-group label {
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
             color: #475569;
         }
 
-        .form-group input, .form-group textarea, .form-group select {
+        .input-group input, .input-group textarea {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             border: 2px solid #cbd5e1;
-            border-radius: 8px;
+            border-radius: 6px;
             font-size: 14px;
-            transition: all 0.3s;
-            background-color: #f8fafc;
         }
 
-        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+        .input-group input:focus, .input-group textarea:focus {
             outline: none;
-            border-color: var(--primary-color);
-            background-color: #ffffff;
-            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+            border-color: var(--accent);
         }
 
-        .row {
+        .split-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
         }
 
-        /* Items Dynamic Row */
-        .items-table-input {
-            width: 100%;
-            margin-top: 10px;
-            border-collapse: collapse;
-        }
-        .items-table-input th {
-            padding: 8px;
-            text-align: left;
-            color: #64748b;
-            font-size: 13px;
-        }
-        .items-table-input td {
-            padding: 6px 4px;
-        }
-        .btn-add-row {
-            background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-        .btn-delete-row {
-            background-color: #ef4444;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        /* Preview Styling */
-        .preview-section {
+        /* 🧾 Receipt Preview Sheet */
+        .preview-box {
             position: sticky;
             top: 20px;
-            height: fit-content;
         }
 
-        .receipt-box {
-            background: #fff;
+        .receipt-sheet {
+            background: #ffffff;
             padding: 35px;
-            border-radius: 16px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.2);
-            position: relative;
-            min-height: 570px;
+            border-radius: 8px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            min-height: 500px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-        }
-
-        /* Receipt Header */
-        .receipt-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            border-bottom: 3px solid var(--primary-color);
-            padding-bottom: 18px;
-            margin-bottom: 25px;
-        }
-
-        .biz-details h3 {
-            font-size: 24px;
-            color: #312e81;
-            text-transform: uppercase; 
-            font-weight: 800;
-        }
-
-        .biz-details p, #viewBizLocation {
-            font-size: 13px;
-            color: #475569;
-            margin-top: 4px;
-            font-weight: 500;
-            text-transform: uppercase; 
-        }
-
-        .receipt-logo {
-            max-width: 110px;
-            max-height: 85px;
-            object-fit: contain;
-            border-radius: 6px;
-        }
-
-        .receipt-title-box {
-            text-align: right;
-        }
-
-        .receipt-title-box h2 {
-            font-size: 26px;
-            color: var(--primary-color);
-            letter-spacing: 1.5px;
-            font-weight: 800;
-        }
-
-        /* Receipt Meta */
-        .receipt-meta {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 25px;
-            font-size: 14px;
-            background-color: #f8fafc;
-            padding: 10px 15px;
-            border-radius: 8px;
-            border-left: 4px solid var(--accent-color);
-        }
-
-        /* Receipt Body */
-        .receipt-body {
-            font-size: 15px;
-            line-height: 1.8;
-            flex-grow: 1;
-            color: #334155;
-        }
-
-        .customer-row {
-            margin-bottom: 20px;
-            font-size: 16px;
-        }
-
-        .line-item {
-            border-bottom: 2px dashed #cbd5e1;
-            display: inline-block;
-            padding-left: 5px;
-            color: #0f172a;
-            text-transform: uppercase; 
-        }
-
-        /* Items Preview Table */
-        .preview-items-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
-        .preview-items-table th {
-            background-color: #f1f5f9;
-            border-top: 2px solid var(--primary-color);
-            border-bottom: 2px solid var(--primary-color);
-            padding: 10px;
-            font-weight: 700;
-            font-size: 14px;
-            color: #1e3a8a;
-        }
-        
-        .preview-items-table td {
-            border-bottom: 1px dashed #e2e8f0;
-            padding: 10px;
-            font-size: 14px;
-            color: #334155;
-        }
-        .preview-items-table td:first-child {
-            text-transform: uppercase; 
-        }
-        
-        .preview-items-table .total-tr {
-            border-top: 2px solid var(--primary-color);
-            border-bottom: 3px double var(--primary-color);
-            font-weight: bold;
-            font-size: 18px;
-            background-color: #eff6ff;
-            color: #1e40af;
-        }
-
-        .payment-method-box {
-            margin-top: 15px;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        /* Footer & Branding & Seal Area */
-        .receipt-footer {
-            margin-top: 35px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
+            border-top: 8px solid var(--accent);
             position: relative;
         }
 
-        .atava-branding {
-            font-size: 12px;
-            color: #94a3b8;
-            text-align: left;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        .atava-branding span {
-            color: var(--primary-color);
-            font-weight: bold;
-        }
-
-        /* RECEIVED Seal */
-        .seal-container {
+        /* Watermark style */
+        .receipt-sheet::before {
+            content: "CASH RECEIPT";
             position: absolute;
-            right: 170px;
-            bottom: -5px;
-        }
-
-        .received-seal {
-            width: 75px;
-            height: 75px;
-            border: 3px double #ef4444; 
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transform: rotate(-12deg); 
-            opacity: 0.85;
-            background-color: rgba(254, 226, 226, 0.3);
-            box-shadow: 0 0 4px rgba(239, 68, 68, 0.1);
-        }
-
-        .seal-main {
-            font-size: 13px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 60px;
             font-weight: 900;
-            color: #ef4444;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            border-top: 2px solid #ef4444;
-            border-bottom: 2px solid #ef4444;
-            padding: 2px 5px;
+            color: rgba(0, 0, 0, 0.03);
+            white-space: nowrap;
+            pointer-events: none;
         }
 
-        .signature {
+        .receipt-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px dashed #cbd5e1;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .company-info h3 {
+            font-size: 22px;
+            color: var(--accent);
+            text-transform: uppercase;
+        }
+
+        .company-info p {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        .receipt-title-block {
+            text-align: right;
+        }
+
+        .receipt-title-block h1 {
+            font-size: 24px;
+            color: var(--primary);
+            letter-spacing: 1px;
+        }
+
+        .receipt-meta {
+            font-size: 13px;
+            margin-top: 5px;
+            color: #475569;
+        }
+
+        .receipt-body-row {
+            margin-bottom: 15px;
+            font-size: 15px;
+            line-height: 1.6;
+            display: flex;
+            border-bottom: 1px dotted #94a3b8;
+            padding-bottom: 4px;
+        }
+
+        .body-label {
+            font-weight: 600;
+            color: #475569;
+            width: 140px;
+            flex-shrink: 0;
+        }
+
+        .body-val {
+            color: #0f172a;
+            word-break: break-word;
+        }
+
+        .amount-badge-box {
+            background: #f1f5f9;
+            border: 2px solid var(--accent);
+            padding: 12px 20px;
+            border-radius: 6px;
+            display: inline-block;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--accent);
+            margin-top: 15px;
+        }
+
+        .receipt-bottom {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .appreciation-note {
+            font-size: 11px;
+            color: #64748b;
+            font-style: italic;
+            max-width: 60%;
+        }
+
+        .sig-block {
             text-align: center;
             width: 150px;
-            z-index: 2; 
         }
 
         .sig-line {
-            border-top: 2px solid #475569;
-            margin-top: 45px;
-            font-size: 13px;
+            border-top: 1px solid #475569;
+            margin-top: 35px;
+            font-size: 12px;
             color: #475569;
             font-weight: 600;
         }
 
-        /* Action Buttons */
-        .actions {
-            margin-top: 25px;
+        .action-bar {
+            margin-top: 20px;
             display: flex;
+            gap: 10px;
             justify-content: flex-end;
-            gap: 15px;
         }
 
-        .btn-print {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
+        .btn {
+            padding: 12px 20px;
             border: none;
-            padding: 14px 25px;
-            font-size: 16px;
+            border-radius: 6px;
             font-weight: bold;
-            border-radius: 8px;
+            font-size: 14px;
             cursor: pointer;
-            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
-            transition: all 0.3s;
+            transition: transform 0.2s;
         }
 
-        /* ⚡ വാട്സാപ്പ് ബട്ടൺ സ്റ്റൈൽ */
-        .btn-whatsapp {
-            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-            color: white;
-            border: none;
-            padding: 14px 25px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);
-            transition: all 0.3s;
-        }
-
-        .btn-print:hover, .btn-whatsapp:hover {
+        .btn:hover {
             transform: translateY(-2px);
         }
 
-        @media (max-width: 950px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-            header {
-                grid-column: span 1;
-            }
-            .actions {
-                flex-direction: column;
-            }
+        /* ⚡ PDF ഡൗൺലോഡ് ബട്ടൺ കളർ */
+        .btn-pdf {
+            background: #ef4444;
+            color: white;
         }
 
-        /* PRINT STYLES */
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+        }
+
+        @media (max-width: 900px) {
+            .main-container { grid-template-columns: 1fr; }
+            .action-bar { flex-direction: column; }
+            .btn { width: 100%; text-align: center; }
+        }
+
+        /* PRINT SETTING */
         @media print {
-            @page {
-                margin-top: 10mm; 
-                margin-bottom: 10mm;
-            }
-            body {
-                background: #fff !important;
-                padding: 0;
-                -webkit-print-color-adjust: exact !important; 
-                print-color-adjust: exact !important;
-            }
-            .form-section, header, .actions, .btn-add-row, .btn-delete-row {
-                display: none !important;
-            }
-            .container {
-                display: block;
-            }
-            .preview-section {
-                position: relative;
-                width: 100%;
-            }
-            .receipt-box {
-                box-shadow: none !important;
-                border: 2px solid var(--primary-color) !important;
-                padding: 25px;
-                border-radius: 12px;
-                min-height: auto;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-            .receipt-meta {
-                background-color: #f8fafc !important;
-                border-left: 4px solid var(--accent-color) !important;
-            }
-            .preview-items-table th {
-                background-color: #f1f5f9 !important;
-                color: #1e3a8a !important;
-            }
-            .preview-items-table .total-tr {
-                background-color: #eff6ff !important;
-                color: #1e40af !important;
-            }
-            .received-seal {
-                background-color: rgba(254, 226, 226, 0.3) !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
+            body { background: none; padding: 0; }
+            .form-box, .action-bar { display: none !important; }
+            .main-container { display: block; }
+            .receipt-sheet { box-shadow: none; border: none; padding: 0; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <h1>Simple Cash Receipt Generator</h1>
-            <p>Create and Print Professional Receipts Instantly</p>
-        </header>
-
-        <!-- Left Side: Inputs -->
-        <div class="form-section">
-            <h2>Receipt Details</h2>
+    <div class="main-container">
+        <!-- Left Box: Inputs -->
+        <div class="form-box">
+            <h2>Create Cash Receipt</h2>
             
-            <div class="form-group">
-                <label for="logoInput">Upload Company Logo</label>
-                <input type="file" id="logoInput" accept="image/*">
+            <div class="input-group">
+                <label for="compName">Business / Shop Name</label>
+                <input type="text" id="compName" placeholder="e.g., ATAVA Digital Services" oninput="liveUpdate()">
             </div>
 
-            <div class="form-group">
-                <label for="bizName">Business / Shop Name</label>
-                <input type="text" id="bizName" placeholder="Enter Business Name...">
+            <div class="input-group">
+                <label for="compSub">Contact / Subtitle</label>
+                <input type="text" id="compSub" placeholder="e.g., Phone: +91 xxxxxxxxxx" oninput="liveUpdate()">
             </div>
 
-            <div class="form-group">
-                <label for="bizLocation">Location / Place</label>
-                <input type="text" id="bizLocation" placeholder="Enter Location/City...">
-            </div>
-
-            <div class="row">
-                <div class="form-group">
-                    <label for="bizMob">Mobile Number</label>
-                    <input type="text" id="bizMob" placeholder="Enter Phone No...">
+            <div class="split-row">
+                <div class="input-group">
+                    <label for="recNo">Receipt No.</label>
+                    <input type="text" id="recNo" placeholder="e.g., CR-1024" oninput="liveUpdate()">
                 </div>
-                <div class="form-group">
-                    <label for="bizEmail">Email Address</label>
-                    <input type="email" id="bizEmail" placeholder="Enter Email...">
+                <div class="input-group">
+                    <label for="recDate">Date</label>
+                    <input type="date" id="recDate" oninput="liveUpdate()">
                 </div>
             </div>
 
-            <div class="row">
-                <div class="form-group">
-                    <label for="receiptNo">Receipt No</label>
-                    <input type="text" id="receiptNo" placeholder="e.g., 101">
-                </div>
-                <div class="form-group">
-                    <label for="receiptDate">Date</label>
-                    <input type="date" id="receiptDate">
-                </div>
+            <div class="input-group">
+                <label for="recReceivedFrom">Received From (Customer Name)</label>
+                <input type="text" id="recReceivedFrom" placeholder="Who paid the money?" oninput="liveUpdate()">
             </div>
 
-            <div class="row">
-                <div class="form-group">
-                    <label for="custName">Received From (Customer Name)</label>
-                    <input type="text" id="custName" placeholder="Enter customer name...">
-                </div>
-                <!-- ⚡ കസ്റ്റമറുടെ വാട്സാപ്പ് നമ്പർ ഇൻപുട്ട് ഫീൽഡ് -->
-                <div class="form-group">
-                    <label for="custWhatsapp">Customer WhatsApp No (With Country Code)</label>
-                    <input type="text" id="custWhatsapp" placeholder="e.g., 919876543210">
-                </div>
+            <div class="input-group">
+                <label for="recAmount">Amount Received (₹ / $)</label>
+                <input type="number" id="recAmount" placeholder="0.00" oninput="liveUpdate()">
             </div>
 
-            <!-- Multiple Descriptions Section -->
-            <div class="form-group">
-                <label style="margin-bottom: 0;">Descriptions / Particulars</label>
-                <table class="items-table-input" id="itemsTableInput">
-                    <thead>
-                        <tr>
-                            <th style="width: 70%;">Description</th>
-                            <th style="width: 25%;">Amount</th>
-                            <th style="width: 5%;"></th>
-                        </tr>
-                    </thead>
-                    <tbody id="inputFieldsContainer">
-                        <tr>
-                            <td><input type="text" class="item-desc" placeholder="e.g., Service Description" oninput="updateLivePreview()"></td>
-                            <td><input type="number" class="item-amt" placeholder="0.00" oninput="updateLivePreview()"></td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <button type="button" class="btn-add-row" onclick="addNewRow()">+ Add Row</button>
+            <div class="input-group">
+                <label for="recPurpose">Payment For (Purpose/Description)</label>
+                <textarea id="recPurpose" rows="2" placeholder="e.g., Advance for Website design / Project work" oninput="liveUpdate()"></textarea>
             </div>
 
-            <div class="form-group">
-                <label for="payMethod">Payment Method</label>
-                <select id="payMethod">
-                    <option value="Cash">Cash</option>
-                    <option value="GPay / UPI">GPay / UPI</option>
-                    <option value="Card">Card</option>
-                    <option value="Bank Transfer">Bank Transfer</option>
-                </select>
+            <div class="input-group">
+                <label for="clientMobile">Customer WhatsApp Number (Optional)</label>
+                <input type="text" id="clientMobile" placeholder="e.g., 919876543210">
             </div>
         </div>
 
-        <!-- Right Side: Live Preview -->
-        <div class="preview-section">
-            <div class="receipt-box" id="receiptPrintArea">
-                
+        <!-- Right Box: Live Sheet & Download Trigger -->
+        <div class="preview-box">
+            <div class="receipt-sheet" id="receiptCaptureArea">
                 <div>
-                    <!-- Receipt Header -->
-                    <div class="receipt-header">
-                        <div class="biz-details">
-                            <h3 id="viewBizName">BUSINESS NAME</h3>
-                            <p id="viewBizLocation" style="font-weight: 600; margin-bottom: 2px;"></p>
-                            <p style="font-size: 12px; color: #555;">
-                                <span id="viewBizMob">Mob: ------</span> | <span id="viewBizEmail">Email: ------</span>
-                            </p>
+                    <div class="receipt-top">
+                        <div class="company-info">
+                            <h3 id="vComp">YOUR BUSINESS</h3>
+                            <p id="vSub"></p>
                         </div>
-                        <div>
-                            <img id="viewLogo" class="receipt-logo" src="" alt="" style="display: none;">
-                        </div>
-                    </div>
-
-                    <!-- Receipt Title & Meta -->
-                    <div class="receipt-meta">
-                        <div>
-                            <p><strong>Receipt No:</strong> <span id="viewReceiptNo">---</span></p>
-                        </div>
-                        <div class="receipt-title-box">
-                            <h2>CASH RECEIPT</h2>
-                        </div>
-                        <div>
-                            <p><strong>Date:</strong> <span id="viewDate">--/---/----</span></p>
+                        <div class="receipt-title-block">
+                            <h1>RECEIPT</h1>
+                            <div class="receipt-meta">
+                                <strong>No:</strong> <span id="vNo">---</span><br>
+                                <strong>Date:</strong> <span id="vDate">--/--/----</span>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Receipt Body -->
+                    <!-- Receipt Content Structure -->
                     <div class="receipt-body">
-                        <div class="customer-row">
-                            Received with thanks from <strong class="line-item" id="viewCustName" style="width: 65%;">...................................................</strong>
+                        <div class="receipt-body-row">
+                            <div class="body-label">Received From:</div>
+                            <div class="body-val" id="vFrom">..................................................................</div>
+                        </div>
+                        <div class="receipt-body-row" style="margin-top: 20px;">
+                            <div class="body-label">The Sum Of:</div>
+                            <div class="body-val" id="vPurpose">..................................................................</div>
                         </div>
                         
-                        <!-- Description Preview Table -->
-                        <table class="preview-items-table">
-                            <thead>
-                                <tr>
-                                    <th style="text-align: left;">Description</th>
-                                    <th style="text-align: right; width: 30%;">Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody id="previewItemsContainer">
-                                <!-- Dynamic Rows Go Here -->
-                            </tbody>
-                            <tfoot>
-                                <tr class="total-tr">
-                                    <td style="text-align: right;">Total Amount:</td>
-                                    <td style="text-align: right;" id="viewTotalAmount">0.00</td>
-                                </tr>
-                            </tfoot>
-                        </table>
-
-                        <div class="payment-method-box">
-                            <strong>Payment Method:</strong> <span id="viewPayMethod">Cash</span>
+                        <div class="amount-badge-box">
+                            Total: <span id="vAmount">0.00</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Receipt Footer & Branding & Seal -->
-                <div class="receipt-footer">
-                    <div class="atava-branding">
-                        Powered by <span>ATAVA DST</span>
+                <div class="receipt-bottom">
+                    <div class="appreciation-note">
+                        Thank you for your payment. It is our pleasure doing business with you!
                     </div>
-                    
-                    <!-- RECEIVED Seal -->
-                    <div class="seal-container">
-                        <div class="received-seal">
-                            <span class="seal-main">RECEIVED</span>
-                        </div>
-                    </div>
-
-                    <div class="signature">
-                        <div class="sig-line">Authorized Signatory</div>
+                    <div class="sig-block">
+                        <div class="sig-line">Authorized Signee</div>
                     </div>
                 </div>
-
             </div>
 
-            <div class="actions">
-                <!-- ⚡ വാട്സാപ്പ് അയക്കാനുള്ള പുതിയ ബട്ടൺ -->
-                <button class="btn-whatsapp" onclick="sendWhatsAppReceipt()">Send via WhatsApp</button>
-                <button class="btn-print" onclick="handlePrint()">Print / Save PDF</button>
+            <!-- Download & Sharing Buttons -->
+            <div class="action-bar">
+                <button class="btn btn-pdf" onclick="downloadReceiptPDF()">Download PDF</button>
+                <button class="btn btn-whatsapp" onclick="shareViaWhatsApp()">Share on WhatsApp</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Set Default Date to Today
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('receiptDate').value = today;
+        // Set Default Current Date
+        document.getElementById('recDate').value = new Date().toISOString().split('T')[0];
 
-        // Input Elements
-        const bizName = document.getElementById('bizName');
-        const bizLocation = document.getElementById('bizLocation');
-        const bizMob = document.getElementById('bizMob');
-        const bizEmail = document.getElementById('bizEmail');
-        const receiptNo = document.getElementById('receiptNo');
-        const receiptDate = document.getElementById('receiptDate');
-        const custName = document.getElementById('custName');
-        const custWhatsapp = document.getElementById('custWhatsapp');
-        const payMethod = document.getElementById('payMethod');
-        const logoInput = document.getElementById('logoInput');
-
-        // Preview Elements
-        const viewBizName = document.getElementById('viewBizName');
-        const viewBizLocation = document.getElementById('viewBizLocation');
-        const viewBizMob = document.getElementById('viewBizMob');
-        const viewBizEmail = document.getElementById('viewBizEmail');
-        const viewReceiptNo = document.getElementById('viewReceiptNo');
-        const viewDate = document.getElementById('viewDate');
-        const viewCustName = document.getElementById('viewCustName');
-        const viewPayMethod = document.getElementById('viewPayMethod');
-        const viewLogo = document.getElementById('viewLogo');
-
-        // Event Listeners for Live Updates
-        bizName.addEventListener('input', updateLivePreview);
-        bizLocation.addEventListener('input', updateLivePreview);
-        bizMob.addEventListener('input', updateLivePreview);
-        bizEmail.addEventListener('input', updateLivePreview);
-        receiptNo.addEventListener('input', updateLivePreview);
-        custName.addEventListener('input', updateLivePreview);
-        payMethod.addEventListener('change', updateLivePreview);
-        receiptDate.addEventListener('change', updateLivePreview);
-
-        // Logo Upload Handler
-        logoInput.addEventListener('change', function() {
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    viewLogo.src = e.target.result;
-                    viewLogo.style.display = 'block';
-                }
-                reader.readAsDataURL(file);
+        function liveUpdate() {
+            document.getElementById('vComp').innerText = document.getElementById('compName').value || 'YOUR BUSINESS';
+            document.getElementById('vSub').innerText = document.getElementById('compSub').value || '';
+            document.getElementById('vNo').innerText = document.getElementById('recNo').value || '---';
+            
+            const rawDate = document.getElementById('recDate').value;
+            if(rawDate) {
+                const parts = rawDate.split('-');
+                document.getElementById('vDate').innerText = `${parts[2]}/${parts[1]}/${parts[0]}`;
             } else {
-                viewLogo.style.display = 'none';
-                viewLogo.src = '';
+                document.getElementById('vDate').innerText = '--/--/----';
             }
-        });
 
-        // Add New Input Row for Descriptions
-        function addNewRow() {
-            const container = document.getElementById('inputFieldsContainer');
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td><input type="text" class="item-desc" placeholder="Next description" oninput="updateLivePreview()"></td>
-                <td><input type="number" class="item-amt" placeholder="0.00" oninput="updateLivePreview()"></td>
-                <td><button type="button" class="btn-delete-row" onclick="deleteRow(this)">X</button></td>
-            `;
-            container.appendChild(tr);
-            updateLivePreview();
-        }
-
-        // Delete Input Row
-        function deleteRow(button) {
-            button.closest('tr').remove();
-            updateLivePreview();
-        }
-
-        // Format Date to 11/Jun/2026
-        function formatCustomDate(dateString) {
-            if(!dateString) return '--/---/----';
-            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            const [year, month, day] = dateString.split('-');
-            const monthName = months[parseInt(month) - 1];
-            return `${day}/${monthName}/${year}`;
-        }
-
-        // Core Function to Synchronize and Update Preview
-        function updateLivePreview() {
-            viewBizName.innerText = bizName.value || 'BUSINESS NAME';
-            viewBizLocation.innerText = bizLocation.value ? bizLocation.value : '';
-            viewBizMob.innerText = bizMob.value ? "Mob: " + bizMob.value : 'Mob: ------';
-            viewBizEmail.innerText = bizEmail.value ? "Email: " + bizEmail.value : 'Email: ------';
+            document.getElementById('vFrom').innerText = document.getElementById('recReceivedFrom').value || '..................................................................';
+            document.getElementById('vPurpose').innerText = document.getElementById('recPurpose').value || '..................................................................';
             
-            viewReceiptNo.innerText = receiptNo.value || '---';
-            viewCustName.innerText = custName.value || '...................................................';
-            viewPayMethod.innerText = payMethod.value;
-            viewDate.innerText = formatCustomDate(receiptDate.value);
-
-            const descs = document.querySelectorAll('.item-desc');
-            const amts = document.querySelectorAll('.item-amt');
-            const previewContainer = document.getElementById('previewItemsContainer');
-            
-            previewContainer.innerHTML = ''; 
-            let total = 0;
-
-            descs.forEach((descInput, index) => {
-                const descValue = descInput.value || '...................................................';
-                const amtValue = parseFloat(amts[index].value) || 0;
-                total += amtValue;
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${descValue}</td>
-                    <td style="text-align: right;">${amtValue.toFixed(2)}</td>
-                `;
-                previewContainer.appendChild(tr);
-            });
-
-            document.getElementById('viewTotalAmount').innerText = total.toFixed(2);
+            const amt = parseFloat(document.getElementById('recAmount').value) || 0;
+            document.getElementById('vAmount').innerText = amt.toFixed(2);
         }
 
-        // ⚡ വാട്സാപ്പിലേക്ക് മെസ്സേജ് ഫോർമാറ്റ് ചെയ്ത് അയക്കാനുള്ള ഫങ്ക്ഷൻ
-        function sendWhatsAppReceipt() {
-            const phone = custWhatsapp.value.trim();
-            if (!phone) {
+        // ⚡ കസ്റ്റമറുടെ മൊബൈലിലേക്ക് പക്കാ PDF ആയി ഡൗൺലോഡ് ചെയ്യിക്കുന്ന ഫങ്ക്ഷൻ
+        function downloadReceiptPDF() {
+            const element = document.getElementById('receiptCaptureArea');
+            const rNo = document.getElementById('recNo').value || 'receipt';
+            
+            const config = {
+                margin:       15,
+                filename:     `receipt_${rNo}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // ഇത് ഫോണിൽ ഡൗൺലോഡ് ട്രിഗർ ചെയ്യും
+            html2pdf().set(config).from(element).save();
+        }
+
+        function shareViaWhatsApp() {
+            const mobile = document.getElementById('clientMobile').value.trim();
+            if(!mobile) {
                 alert("Please enter the Customer's WhatsApp Number first!");
                 return;
             }
 
-            const bName = (bizName.value || 'Our Business').toUpperCase();
-            const cName = (custName.value || 'Customer').toUpperCase();
-            const rNo = receiptNo.value || '---';
-            const rDate = formatCustomDate(receiptDate.value);
-            const pMethod = payMethod.value;
-            const totalAmt = document.getElementById('viewTotalAmount').innerText;
+            const cName = document.getElementById('compName').value || 'Our Business';
+            const rNo = document.getElementById('recNo').value || '---';
+            const rFrom = document.getElementById('recReceivedFrom').value || 'Customer';
+            const rAmt = parseFloat(document.getElementById('recAmount').value) || 0;
+            const rPurpose = document.getElementById('recPurpose').value || 'Services';
 
-            // ഐറ്റംസ് ലിസ്റ്റ് ഫോർമാറ്റ് ചെയ്യുന്നു
-            const descs = document.querySelectorAll('.item-desc');
-            const amts = document.querySelectorAll('.item-amt');
-            let itemsText = '';
-            
-            descs.forEach((descInput, index) => {
-                const d = descInput.value || 'Service';
-                const a = parseFloat(amts[index].value) || 0;
-                itemsText += `▪️ ${d.toUpperCase()}:  ${a.toFixed(2)}\n`;
-            });
+            const text = `*CASH RECEIPT FROM ${cName.toUpperCase()}*\n` +
+                         `---------------------------------------\n` +
+                         `🧾 *Receipt No:* ${rNo}\n` +
+                         `👤 *Received From:* ${rFrom}\n` +
+                         `🎯 *Purpose:* ${rPurpose}\n` +
+                         `💰 *Amount Paid:* ${rAmt.toFixed(2)}\n` +
+                         `---------------------------------------\n` +
+                         `📝 _Thank you for your payment. It is our absolute pleasure serving you!_`;
 
-            // വാട്സാപ്പ് മെസ്സേജ് ടെംപ്ലേറ്റ് (Bold & Space ഒക്കെ സെറ്റ് ആക്കിയത്)
-            const message = `*CASH RECEIPT* \n` +
-                            `----------------------------------\n` +
-                            `🏢 *${bName}*\n` +
-                            `📍 ${bizLocation.value.toUpperCase() || ''}\n` +
-                            `----------------------------------\n` +
-                            `🧾 *Receipt No:* ${rNo}\n` +
-                            `📅 *Date:* ${rDate}\n` +
-                            `👤 *Customer:* ${cName}\n` +
-                            `----------------------------------\n` +
-                            `*PARTICULARS:*\n${itemsText}` +
-                            `----------------------------------\n` +
-                            `💰 *TOTAL AMOUNT:  ${totalAmt}*\n` +
-                            `💳 *Payment Method:* ${pMethod}\n\n` +
-                            `🙏 *Thank you for your business!*`;
-
-            // ലിങ്ക് ജനറേറ്റ് ചെയ്ത് പുതിയ ടാബിൽ ഓപ്പൺ ചെയ്യുന്നു
-            const whatsappUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
+            window.open(`https://api.whatsapp.com/send?phone=${mobile}&text=${encodeURIComponent(text)}`, '_blank');
         }
 
-        // പ്രിന്റ് ഹാൻഡ്‌ലർ ഫങ്ക്ഷൻ
-        function handlePrint() {
-            const originalTitle = document.title;
-            document.title = ""; 
-            window.print(); 
-            setTimeout(() => {
-                document.title = originalTitle;
-            }, 100);
-        }
-
-        // Initial trigger on setup load
-        updateLivePreview();
+        // Initial Run
+        liveUpdate();
     </script>
 </body>
 </html>
