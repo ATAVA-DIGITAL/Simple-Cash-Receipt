@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Cash Receipt Generator - ATAVA DST</title>
-    <!-- ⚡ ഇമേജ് ഡൗൺലോഡ് സാധ്യമാക്കാൻ ഉള്ള ലൈബ്രറി ചേർത്തു -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- ⚡ മൊബൈലിൽ ക്ലിയർ ആയ PDF ഡൗൺലോഡ് സാധ്യമാക്കാൻ ഉള്ള ലൈബ്രറി ചേർത്തു -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
             --primary-color: #4f46e5; 
@@ -384,8 +384,8 @@
             transition: all 0.3s;
         }
 
-        /* ⚡ ഫോട്ടോ ആയി ഡൗൺലോഡ് ചെയ്യാനുള്ള പുതിയ ബട്ടൺ സ്റ്റൈൽ */
-        .btn-download-img {
+        /* ⚡ ഫോട്ടോയ്ക്ക് പകരം ക്ലിയർ ആയ PDF ഡൗൺലോഡ് ചെയ്യാനുള്ള പുതിയ ബട്ടൺ സ്റ്റൈൽ */
+        .btn-download-pdf {
             background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
             color: white;
             border: none;
@@ -398,7 +398,7 @@
             transition: all 0.3s;
         }
 
-        .btn-print:hover, .btn-whatsapp:hover, .btn-download-img:hover {
+        .btn-print:hover, .btn-whatsapp:hover, .btn-download-pdf:hover {
             transform: translateY(-2px);
         }
 
@@ -642,8 +642,8 @@
             </div>
 
             <div class="actions">
-                <!-- ⚡ ഫോട്ടോ ആയി ഡൗൺലോഡ് ചെയ്യാനുള്ള പുതിയ ബട്ടൺ -->
-                <button class="btn-download-img" onclick="downloadReceiptImage()">Download Image (Photo)</button>
+                <!-- ⚡ ഫോട്ടോയ്ക്ക് പകരം ക്ലിയർ ആയ PDF ഡൗൺലോഡ് ചെയ്യാനുള്ള പുതിയ ബട്ടൺ -->
+                <button class="btn-download-pdf" onclick="downloadReceiptPDF()">Download PDF</button>
                 <button class="btn-whatsapp" onclick="sendWhatsAppReceipt()">Send via WhatsApp</button>
                 <button class="btn-print" onclick="handlePrint()">Print / Save PDF</button>
             </div>
@@ -769,31 +769,22 @@
             document.getElementById('viewTotalAmount').innerText = total.toFixed(2);
         }
 
-        // ⚡ റെസീപ്റ്റ് ഫോട്ടോ ആയി ഡൗൺലോഡ് ചെയ്യാനുള്ള ഫങ്ക്ഷൻ
-        function downloadReceiptImage() {
+        // ⚡ ക്രിസ്റ്റൽ ക്ലിയർ ആയ PDF നേരിട്ട് ഡൗൺലോഡ് ചെയ്യാനുള്ള ഫങ്ക്ഷൻ
+        function downloadReceiptPDF() {
             const receiptArea = document.getElementById('receiptPrintArea');
+            const rNo = receiptNo.value || '000';
             
-            // മൊബൈൽ സ്ക്രീനിൽ ഇമേജ് ക്വാളിറ്റി കൂട്ടാൻ വേണ്ടിയുള്ള സെറ്റിങ്സ്
+            // PDF കോൺഫിഗറേഷൻ സെറ്റിങ്സ്
             const options = {
-                scale: 2, 
-                useCORS: true, 
-                backgroundColor: '#ffffff',
-                logging: false
+                margin:        [10, 10, 10, 10], // mm ലുള്ള മാർജിൻ
+                filename:     `Receipt_${rNo}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true }, // സൂം ചെയ്യുമ്പോൾ ക്ലിയർ ആയിരിക്കാൻ സ്കെയിൽ കൂട്ടി
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
-            html2canvas(receiptArea, options).then(canvas => {
-                const image = canvas.toDataURL('image/png');
-                const link = document.createElement('a');
-                
-                // ഫയൽ നെയിം സെറ്റ് ചെയ്യുന്നു (ഉദാ: Receipt_101.png)
-                const rNo = receiptNo.value || '000';
-                link.download = `Receipt_${rNo}.png`;
-                link.href = image;
-                link.click();
-            }).catch(err => {
-                alert('Image download failed. Please try again.');
-                console.error(err);
-            });
+            // PDF ജനറേറ്റ് ചെയ്ത് ഡൗൺലോഡ് ചെയ്യിക്കുന്നു
+            html2pdf().set(options).from(receiptArea).save();
         }
 
         // വാട്സാപ്പിലേക്ക് മെസ്സേജ് ഫോർമാറ്റ് ചെയ്ത് അയക്കാനുള്ള ഫങ്ക്ഷൻ
